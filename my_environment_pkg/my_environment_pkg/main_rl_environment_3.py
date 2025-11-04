@@ -470,7 +470,7 @@ class MyRLEnvironmentNode(Node):
             distance = np.linalg.norm(robot_end_position - target_point_position)
             print ("###----DISTANZA---", distance)
 
-            if distance <= 0.12:
+            if distance <= 0.09:
                 self.get_logger().info('### Goal Reached ###')
                 done = True
                 reward_d = reward_scale * 1
