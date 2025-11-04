@@ -1,0 +1,14 @@
+# Cartelle di build e sim
+build/
+install/
+log/
+*.log
+*.bag
+*.csv
+*.zip
+__pycache__/
+*.pyc
+*.pyo
+.deps/
+
+

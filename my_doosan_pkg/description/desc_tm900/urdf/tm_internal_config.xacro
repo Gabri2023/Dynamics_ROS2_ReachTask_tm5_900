@@ -1,0 +1,83 @@
+<?xml version="0.001"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+	<xacro:macro name="tm_internal_config">
+
+    <!-- I need this for a better simulation in Gazebo-->
+    <!-- I modified this file a bit, it was available in the original Doosan repo as macro.gazebo.xacro -->
+    <!-- This include the Contact Coefficients and other parameters, still no sure if this is correct --> 
+    <!-- More info here http://gazebosim.org/tutorials?tut=ros_urdf -->
+
+
+    <!-- Base -->
+    <gazebo reference="base_link">
+      <kp>100000.0</kp>
+      <kd>10.0</kd>
+      <mu1>0.9</mu1>
+      <mu2>0.9</mu2>
+      <maxVel>0.001</maxVel>
+      <minDepth>0.001</minDepth>
+    </gazebo>
+
+    <!-- Link1 -->
+    <gazebo reference="shoulder_1_link">
+      <kp>100000.0</kp>
+      <kd>10.0</kd>
+      <mu1>0.9</mu1>
+      <mu2>0.9</mu2>
+      <maxVel>0.001</maxVel>
+      <minDepth>0.001</minDepth>
+    </gazebo>
+    
+    <!-- Link2 -->
+    <gazebo reference="arm_1_link">
+      <kp>100000.0</kp>
+      <kd>10.0</kd>
+      <mu1>0.9</mu1>
+      <mu2>0.9</mu2>
+      <maxVel>0.001</maxVel>
+      <minDepth>0.001</minDepth>
+    </gazebo>
+    
+    <!-- Link3 -->
+    <gazebo reference="arm_2_link">
+      <kp>100000.0</kp>
+      <kd>10.0</kd>
+      <mu1>0.9</mu1>
+      <mu2>0.9</mu2>
+      <maxVel>0.001</maxVel>
+      <minDepth>0.001</minDepth>
+    </gazebo>
+    
+    <!-- Link4 -->
+    <gazebo reference="wrist_1_link">
+      <kp>100000.0</kp>
+      <kd>10.0</kd>
+      <mu1>0.9</mu1>
+      <mu2>0.9</mu2>
+      <maxVel>0.001</maxVel>
+      <minDepth>0.001</minDepth>
+    </gazebo>
+    
+    <!-- Link5 -->
+    <gazebo reference="wrist_2_link">    
+      <kp>100000.0</kp>
+      <kd>10.0</kd>
+      <mu1>0.9</mu1>
+      <mu2>0.9</mu2>
+      <maxVel>0.001</maxVel>
+      <minDepth>0.001</minDepth>
+    </gazebo>
+    
+    <!-- Link6 -->
+    <gazebo reference="wrist_3_link">
+      <kp>100000.0</kp>
+      <kd>10.0</kd>
+      <mu1>0.9</mu1>
+      <mu2>0.9</mu2>
+      <maxVel>0.001</maxVel>
+      <minDepth>0.001</minDepth>
+    </gazebo>
+
+	</xacro:macro>
+</robot>

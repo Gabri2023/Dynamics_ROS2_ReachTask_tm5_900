@@ -1,0 +1,163 @@
+[INFO] [launch]: All log files can be found below /home/gabri/.ros/log/2025-09-30-02-02-29-671038-gabri-Lenovo-Legion-5-15ARH05H-9802
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [robot_state_publisher-1]: process started with pid [9805]
+[INFO] [spawn_entity.py-2]: process started with pid [9807]
+[INFO] [ros2-3]: process started with pid [9809]
+[INFO] [ros2-4]: process started with pid [9811]
+[INFO] [spawn_entity.py-5]: process started with pid [9813]
+[INFO] [reader_mark_node-6]: process started with pid [9815]
+[INFO] [gazebo-7]: process started with pid [9818]
+[robot_state_publisher-1] Parsing robot urdf xml string.
+[robot_state_publisher-1] Link base had 1 children
+[robot_state_publisher-1] Link base_link had 1 children
+[robot_state_publisher-1] Link shoulder_1_link had 1 children
+[robot_state_publisher-1] Link arm_1_link had 1 children
+[robot_state_publisher-1] Link arm_2_link had 1 children
+[robot_state_publisher-1] Link wrist_1_link had 1 children
+[robot_state_publisher-1] Link wrist_2_link had 1 children
+[robot_state_publisher-1] Link wrist_3_link had 1 children
+[robot_state_publisher-1] Link flange_link had 1 children
+[robot_state_publisher-1] Link tool0 had 0 children
+[robot_state_publisher-1] [INFO] [1759190549.884666495] [robot_state_publisher]: got segment arm_1_link
+[robot_state_publisher-1] [INFO] [1759190549.884818679] [robot_state_publisher]: got segment arm_2_link
+[robot_state_publisher-1] [INFO] [1759190549.884834743] [robot_state_publisher]: got segment base
+[robot_state_publisher-1] [INFO] [1759190549.884848222] [robot_state_publisher]: got segment base_link
+[robot_state_publisher-1] [INFO] [1759190549.884861492] [robot_state_publisher]: got segment flange_link
+[robot_state_publisher-1] [INFO] [1759190549.884873994] [robot_state_publisher]: got segment shoulder_1_link
+[robot_state_publisher-1] [INFO] [1759190549.884886775] [robot_state_publisher]: got segment tool0
+[robot_state_publisher-1] [INFO] [1759190549.884899137] [robot_state_publisher]: got segment world
+[robot_state_publisher-1] [INFO] [1759190549.884911219] [robot_state_publisher]: got segment wrist_1_link
+[robot_state_publisher-1] [INFO] [1759190549.884923372] [robot_state_publisher]: got segment wrist_2_link
+[robot_state_publisher-1] [INFO] [1759190549.884935734] [robot_state_publisher]: got segment wrist_3_link
+[spawn_entity.py-5] [INFO] [1759190550.354912969] [spawn_entity]: Spawn Entity started
+[spawn_entity.py-5] [INFO] [1759190550.356071988] [spawn_entity]: Loading entity XML from file /home/gabri/dynamics/robotic_arm_environment/install/my_sphere_pkg/share/my_sphere_pkg/models/sdf/sphere_goal/model.sdf
+[spawn_entity.py-5] [INFO] [1759190550.357792601] [spawn_entity]: Waiting for service /spawn_entity, timeout = 30
+[spawn_entity.py-5] [INFO] [1759190550.358785466] [spawn_entity]: Waiting for service /spawn_entity
+[spawn_entity.py-2] [INFO] [1759190550.377105357] [spawn_entity]: Spawn Entity started
+[spawn_entity.py-2] [INFO] [1759190550.377619599] [spawn_entity]: Loading entity published on topic robot_description
+[spawn_entity.py-2] [INFO] [1759190550.380733199] [spawn_entity]: Waiting for entity xml on robot_description
+[spawn_entity.py-2] [INFO] [1759190550.393914997] [spawn_entity]: Waiting for service /spawn_entity, timeout = 30
+[spawn_entity.py-2] [INFO] [1759190550.394354858] [spawn_entity]: Waiting for service /spawn_entity
+[gazebo-7] Gazebo multi-robot simulator, version 11.11.0
+[gazebo-7] Copyright (C) 2012 Open Source Robotics Foundation.
+[gazebo-7] Released under the Apache 2 License.
+[gazebo-7] http://gazebosim.org
+[gazebo-7] 
+[gazebo-7] Gazebo multi-robot simulator, version 11.11.0
+[gazebo-7] Copyright (C) 2012 Open Source Robotics Foundation.
+[gazebo-7] Released under the Apache 2 License.
+[gazebo-7] http://gazebosim.org
+[gazebo-7] 
+[gazebo-7] [INFO] [1759190551.069343870] [gazebo_ros_node]: ROS was initialized without arguments.
+[spawn_entity.py-5] [INFO] [1759190551.115483131] [spawn_entity]: Calling service /spawn_entity
+[gazebo-7] [INFO] [1759190551.130045275] [gazebo.gazebo_ros_state]: Publishing states of gazebo models at [/gazebo/model_states]
+[gazebo-7] [INFO] [1759190551.130812902] [gazebo.gazebo_ros_state]: Publishing states of gazebo links at [/gazebo/link_states]
+[spawn_entity.py-2] [INFO] [1759190551.149049960] [spawn_entity]: Calling service /spawn_entity
+[gazebo-7] [INFO] [1759190551.337800701] [contact_sensor.gazebo_ros_bumper_sensor]: Publishing contact states to [/contact_sensor/bumper_base_link]
+[gazebo-7] [WARN] [1759190551.339186704] [rcl.logging_rosout]: Publisher already registered for provided node name. If this is due to multiple nodes with the same name then all logs for that logger name will go out over the existing publisher. As soon as any node with that name is destructed it will unregister the publisher, preventing any further logs for that name from being published on the rosout topic.
+[gazebo-7] [INFO] [1759190551.344815433] [contact_sensor.gazebo_ros_bumper_sensor]: Publishing contact states to [/contact_sensor/bumper_shoulder_1_link]
+[gazebo-7] [WARN] [1759190551.346215334] [rcl.logging_rosout]: Publisher already registered for provided node name. If this is due to multiple nodes with the same name then all logs for that logger name will go out over the existing publisher. As soon as any node with that name is destructed it will unregister the publisher, preventing any further logs for that name from being published on the rosout topic.
+[gazebo-7] [INFO] [1759190551.352350552] [contact_sensor.gazebo_ros_bumper_sensor]: Publishing contact states to [/contact_sensor/bumper_arm_1_link]
+[gazebo-7] [WARN] [1759190551.353664130] [rcl.logging_rosout]: Publisher already registered for provided node name. If this is due to multiple nodes with the same name then all logs for that logger name will go out over the existing publisher. As soon as any node with that name is destructed it will unregister the publisher, preventing any further logs for that name from being published on the rosout topic.
+[gazebo-7] [INFO] [1759190551.358340152] [contact_sensor.gazebo_ros_bumper_sensor]: Publishing contact states to [/contact_sensor/bumper_arm_2_link]
+[gazebo-7] [WARN] [1759190551.359735862] [rcl.logging_rosout]: Publisher already registered for provided node name. If this is due to multiple nodes with the same name then all logs for that logger name will go out over the existing publisher. As soon as any node with that name is destructed it will unregister the publisher, preventing any further logs for that name from being published on the rosout topic.
+[gazebo-7] [INFO] [1759190551.366161621] [contact_sensor.gazebo_ros_bumper_sensor]: Publishing contact states to [/contact_sensor/bumper_wrist_1_link]
+[gazebo-7] [WARN] [1759190551.367531980] [rcl.logging_rosout]: Publisher already registered for provided node name. If this is due to multiple nodes with the same name then all logs for that logger name will go out over the existing publisher. As soon as any node with that name is destructed it will unregister the publisher, preventing any further logs for that name from being published on the rosout topic.
+[gazebo-7] [INFO] [1759190551.375144554] [contact_sensor.gazebo_ros_bumper_sensor]: Publishing contact states to [/contact_sensor/bumper_wrist_2_link]
+[gazebo-7] [WARN] [1759190551.377096761] [rcl.logging_rosout]: Publisher already registered for provided node name. If this is due to multiple nodes with the same name then all logs for that logger name will go out over the existing publisher. As soon as any node with that name is destructed it will unregister the publisher, preventing any further logs for that name from being published on the rosout topic.
+[gazebo-7] [INFO] [1759190551.383515326] [contact_sensor.gazebo_ros_bumper_sensor]: Publishing contact states to [/contact_sensor/bumper_wrist_3_link]
+[gazebo-7] [WARN] [1759190551.385543800] [rcl.logging_rosout]: Publisher already registered for provided node name. If this is due to multiple nodes with the same name then all logs for that logger name will go out over the existing publisher. As soon as any node with that name is destructed it will unregister the publisher, preventing any further logs for that name from being published on the rosout topic.
+[spawn_entity.py-2] [INFO] [1759190551.392241102] [spawn_entity]: Spawn status: SpawnEntity: Successfully spawned entity [my_doosan_robot]
+[gazebo-7] [INFO] [1759190551.393114190] [contact_sensor.gazebo_ros_bumper_sensor]: Publishing contact states to [/contact_sensor/bumper_flange_link]
+[gazebo-7] [INFO] [1759190551.424924647] [gazebo_ros2_control]: Loading gazebo_ros2_control plugin
+[gazebo-7] [INFO] [1759190551.432517945] [gazebo_ros2_control]: Starting gazebo_ros2_control plugin in namespace: /
+[gazebo-7] [INFO] [1759190551.432604339] [gazebo_ros2_control]: Starting gazebo_ros2_control plugin in ros 2 node: gazebo_ros2_control
+[gazebo-7] [INFO] [1759190551.432702955] [gazebo_ros2_control]: Loading parameter files /home/gabri/dynamics/robotic_arm_environment/install/my_doosan_pkg/share/my_doosan_pkg/config/simple_controller.yaml
+[gazebo-7] [INFO] [1759190551.439380003] [gazebo_ros2_control]: connected to service!! robot_state_publisher
+[gazebo-7] [INFO] [1759190551.440597199] [gazebo_ros2_control]: Recieved urdf from param server, parsing...
+[INFO] [spawn_entity.py-2]: process has finished cleanly [pid 9807]
+[gazebo-7] [INFO] [1759190551.448288205] [gazebo_ros2_control]: Loading joint: shoulder_1_joint
+[gazebo-7] [INFO] [1759190551.448368523] [gazebo_ros2_control]: 	State:
+[gazebo-7] [INFO] [1759190551.448383259] [gazebo_ros2_control]: 		 position
+[gazebo-7] [INFO] [1759190551.448415736] [gazebo_ros2_control]: 		 velocity
+[gazebo-7] [INFO] [1759190551.448430053] [gazebo_ros2_control]: 		 effort
+[gazebo-7] [INFO] [1759190551.448451425] [gazebo_ros2_control]: 	Command:
+[gazebo-7] [INFO] [1759190551.448463507] [gazebo_ros2_control]: 		 position
+[gazebo-7] [INFO] [1759190551.448489628] [gazebo_ros2_control]: Loading joint: shoulder_2_joint
+[gazebo-7] [INFO] [1759190551.448503037] [gazebo_ros2_control]: 	State:
+[gazebo-7] [INFO] [1759190551.448514841] [gazebo_ros2_control]: 		 position
+[gazebo-7] [INFO] [1759190551.448526923] [gazebo_ros2_control]: 		 velocity
+[gazebo-7] [INFO] [1759190551.448539215] [gazebo_ros2_control]: 		 effort
+[gazebo-7] [INFO] [1759190551.448550669] [gazebo_ros2_control]: 	Command:
+[gazebo-7] [INFO] [1759190551.448562193] [gazebo_ros2_control]: 		 position
+[gazebo-7] [INFO] [1759190551.448575393] [gazebo_ros2_control]: Loading joint: elbow_joint
+[gazebo-7] [INFO] [1759190551.448586707] [gazebo_ros2_control]: 	State:
+[gazebo-7] [INFO] [1759190551.448597742] [gazebo_ros2_control]: 		 position
+[gazebo-7] [INFO] [1759190551.448609406] [gazebo_ros2_control]: 		 velocity
+[gazebo-7] [INFO] [1759190551.448620860] [gazebo_ros2_control]: 		 effort
+[gazebo-7] [INFO] [1759190551.448633361] [gazebo_ros2_control]: 	Command:
+[gazebo-7] [INFO] [1759190551.448645165] [gazebo_ros2_control]: 		 position
+[gazebo-7] [INFO] [1759190551.448657666] [gazebo_ros2_control]: Loading joint: wrist_1_joint
+[gazebo-7] [INFO] [1759190551.448669539] [gazebo_ros2_control]: 	State:
+[gazebo-7] [INFO] [1759190551.448681412] [gazebo_ros2_control]: 		 position
+[gazebo-7] [INFO] [1759190551.448692936] [gazebo_ros2_control]: 		 velocity
+[gazebo-7] [INFO] [1759190551.448704320] [gazebo_ros2_control]: 		 effort
+[gazebo-7] [INFO] [1759190551.448715285] [gazebo_ros2_control]: 	Command:
+[gazebo-7] [INFO] [1759190551.448726739] [gazebo_ros2_control]: 		 position
+[gazebo-7] [INFO] [1759190551.448739590] [gazebo_ros2_control]: Loading joint: wrist_2_joint
+[gazebo-7] [INFO] [1759190551.448751114] [gazebo_ros2_control]: 	State:
+[gazebo-7] [INFO] [1759190551.448762987] [gazebo_ros2_control]: 		 position
+[gazebo-7] [INFO] [1759190551.448774371] [gazebo_ros2_control]: 		 velocity
+[gazebo-7] [INFO] [1759190551.448785965] [gazebo_ros2_control]: 		 effort
+[gazebo-7] [INFO] [1759190551.448797698] [gazebo_ros2_control]: 	Command:
+[gazebo-7] [INFO] [1759190551.448809222] [gazebo_ros2_control]: 		 position
+[gazebo-7] [INFO] [1759190551.448821724] [gazebo_ros2_control]: Loading joint: wrist_3_joint
+[gazebo-7] [INFO] [1759190551.448833527] [gazebo_ros2_control]: 	State:
+[gazebo-7] [INFO] [1759190551.448845121] [gazebo_ros2_control]: 		 velocity
+[gazebo-7] [INFO] [1759190551.448856924] [gazebo_ros2_control]: 		 position
+[gazebo-7] [INFO] [1759190551.448869216] [gazebo_ros2_control]: 		 effort
+[gazebo-7] [INFO] [1759190551.448880670] [gazebo_ros2_control]: 	Command:
+[gazebo-7] [INFO] [1759190551.448892194] [gazebo_ros2_control]: 		 position
+[gazebo-7] [INFO] [1759190551.449071965] [gazebo_ros2_control]: Loading controller_manager
+[gazebo-7] [INFO] [1759190551.470812269] [gazebo_ros2_control]: Loaded gazebo_ros2_control.
+[reader_mark_node-6] [INFO] [1759190551.500264252] [node_sphere_position_mark]: could not get the sphere position yet, trying again...
+[reader_mark_node-6] [INFO] [1759190551.606025728] [node_sphere_position_mark]: could not get the sphere position yet, trying again...
+[gazebo-7] [INFO] [1759190551.699936513] [controller_manager]: Loading controller 'joint_state_broadcaster'
+[spawn_entity.py-5] [INFO] [1759190551.707090928] [spawn_entity]: Spawn status: SpawnEntity: Successfully spawned entity [my_sphere]
+[gazebo-7] [INFO] [1759190551.717106605] [controller_manager]: Loading controller 'joint_trajectory_controller'
+[gazebo-7] [INFO] [1759190551.734509059] [controller_manager]: Configuring controller 'joint_state_broadcaster'
+[gazebo-7] [INFO] [1759190551.738137599] [controller_manager]: Configuring controller 'joint_trajectory_controller'
+[gazebo-7] [INFO] [1759190551.738372057] [joint_trajectory_controller]: Command interfaces are [position] and and state interfaces are [position velocity].
+[gazebo-7] [INFO] [1759190551.739966187] [joint_trajectory_controller]: Controller state will be published at 50.00 Hz.
+[gazebo-7] [INFO] [1759190551.740762240] [joint_trajectory_controller]: Action status changes will be monitored at 20.00 Hz.
+[ros2-3] Sucessfully loaded controller joint_state_broadcaster into state active
+[ros2-4] Sucessfully loaded controller joint_trajectory_controller into state active
+[INFO] [spawn_entity.py-5]: process has finished cleanly [pid 9813]
+[INFO] [ros2-4]: process has finished cleanly [pid 9811]
+[INFO] [ros2-3]: process has finished cleanly [pid 9809]
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [gazebo-7]: sending signal 'SIGINT' to process[gazebo-7]
+[INFO] [reader_mark_node-6]: sending signal 'SIGINT' to process[reader_mark_node-6]
+[INFO] [robot_state_publisher-1]: sending signal 'SIGINT' to process[robot_state_publisher-1]
+[robot_state_publisher-1] [INFO] [1759190611.380646019] [rclcpp]: signal_handler(signal_value=2)
+[reader_mark_node-6] Traceback (most recent call last):
+[reader_mark_node-6]   File "/home/gabri/dynamics/robotic_arm_environment/install/my_sphere_pkg/lib/my_sphere_pkg/reader_mark_node", line 11, in <module>
+[reader_mark_node-6]     load_entry_point('my-sphere-pkg==0.0.0', 'console_scripts', 'reader_mark_node')()
+[reader_mark_node-6]   File "/home/gabri/dynamics/robotic_arm_environment/install/my_sphere_pkg/lib/python3.8/site-packages/my_sphere_pkg/coordinate_node.py", line 91, in main
+[reader_mark_node-6]     rclpy.spin(node)  # spin will be able to call any callback function that you’ve defined
+[reader_mark_node-6]   File "/opt/ros/foxy/lib/python3.8/site-packages/rclpy/__init__.py", line 191, in spin
+[reader_mark_node-6]     executor.spin_once()
+[reader_mark_node-6]   File "/opt/ros/foxy/lib/python3.8/site-packages/rclpy/executors.py", line 711, in spin_once
+[reader_mark_node-6]     handler, entity, node = self.wait_for_ready_callbacks(timeout_sec=timeout_sec)
+[reader_mark_node-6]   File "/opt/ros/foxy/lib/python3.8/site-packages/rclpy/executors.py", line 697, in wait_for_ready_callbacks
+[reader_mark_node-6]     return next(self._cb_iter)
+[reader_mark_node-6]   File "/opt/ros/foxy/lib/python3.8/site-packages/rclpy/executors.py", line 593, in _wait_for_ready_callbacks
+[reader_mark_node-6]     _rclpy.rclpy_wait(wait_set, timeout_nsec)
+[reader_mark_node-6] KeyboardInterrupt
+[robot_state_publisher-1] [INFO] [1759190611.385835375] [rclcpp]: signal_handler(signal_value=2)
+[INFO] [robot_state_publisher-1]: process has finished cleanly [pid 9805]
+[ERROR] [reader_mark_node-6]: process has died [pid 9815, exit code -2, cmd '/home/gabri/dynamics/robotic_arm_environment/install/my_sphere_pkg/lib/my_sphere_pkg/reader_mark_node --ros-args'].
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT) again, ignoring...
+[ERROR] [gazebo-7]: process[gazebo-7] failed to terminate '5' seconds after receiving 'SIGINT', escalating to 'SIGTERM'
+[INFO] [gazebo-7]: sending signal 'SIGTERM' to process[gazebo-7]
+[ERROR] [gazebo-7]: process has died [pid 9818, exit code -15, cmd 'gazebo --verbose /home/gabri/dynamics/robotic_arm_environment/install/my_environment_pkg/share/my_environment_pkg/worlds/my_world.world -s libgazebo_ros_factory.so'].
