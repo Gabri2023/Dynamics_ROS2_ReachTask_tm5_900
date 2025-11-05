@@ -1,11 +1,17 @@
 # Cartelle di build e sim
 build/
+checkpoints/train_8/
+*.pkl
+*pth
+
 install/
+
 log/
 *.log
 *.bag
 *.csv
 *.zip
+
 __pycache__/
 *.pyc
 *.pyo
