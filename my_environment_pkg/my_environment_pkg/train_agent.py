@@ -1,6 +1,3 @@
-#1°terminale ros2 launch my_environment_pkg my_environment.launch.py
-#2°terminale ros2 run my_environment_pkg run_environment_2
-
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -13,7 +10,6 @@ from my_environment_pkg.models.sac_agent import SAC
 from my_environment_pkg.utils.model_saver import load_replay_buffer, load_agent, save_agent, save_replay_buffer
 from my_environment_pkg.buffers.her_replay_buffer import HERReplayBuffer
 from my_environment_pkg.run_environment_2 import MyGymEnv
-
 import csv
 
 from gymnasium.envs.registration import register
@@ -56,7 +52,7 @@ def main():
 
 
     #####---------PER RIPRENDERE L'ALLENAMENTO-------
-    checkpoint_episode = 2650    # numero da cui vuoi ripartir
+    checkpoint_episode = 15350    # numero da cui vuoi ripartir
     agent_path = os.path.join(save_dir, f"sac_her_fetchreach_{checkpoint_episode}_train_delta_100steps_sparso_0_5.pth")
     replay_buffer_path = os.path.join(save_dir, f"replay_buffer_{checkpoint_episode}train_delta_100steps_sparso_0_5.pkl")
 
@@ -73,7 +69,7 @@ def main():
     success_count = 0
 
     # Set hyperparameters
-    max_episodes = 15000 # max number of episodes to stop training
+    max_episodes = 20000 # max number of episodes to stop training
     episode_length = env._max_episode_steps # the default is 50
     batch_size = 256
     num_random_episodes = batch_size
@@ -126,7 +122,7 @@ def main():
             #collisions = env.unwrapped.get_collisions()
             with open(log_file, mode='a', newline='') as f:
                 writer = csv.writer(f)
-                writer.writerow([episode+1,episode_reward/25, success_count, success_count/25])
+                writer.writerow([episode+1,round(episode_reward / 25, 4), success_count, success_count/25])
             #env.unwrapped.set_collisions(0)
             episode_reward = 0
             success_count = 0

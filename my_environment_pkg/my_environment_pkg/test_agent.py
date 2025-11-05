@@ -6,30 +6,13 @@ import gymnasium as gym
 import gymnasium_robotics
 import numpy as np
 import torch
-
 from .models.sac_agent import SAC
 from .utils.model_saver import load_agent
-
 from .run_environment_2 import MyGymEnv
-
 import csv
 import os
-
-
-
 from gymnasium.envs.registration import register
 
-# Registrazione dell'ambiente personalizzato in Gymnasium
-
-
- 
-
-'''if not os.path.exists(log_file):
-    with open(log_file, mode='a', newline='') as f:
-        writer = csv.writer(f)
-        writer.writerow(["Train_episodes", "Reward", "Success"])'''
-
-# Set up environment and testing parameters
 def main():
 
     log_file = 'checkpoints/train_8/Test.csv' 
@@ -44,7 +27,7 @@ def main():
 
     # Device setup
     # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    num_ep=2650
+    num_ep=15350
     device = "cpu"
     model_path = f"/home/gabri/dynamics/robotic_arm_environment/checkpoints/train_8/sac_her_fetchreach_{num_ep}_train_delta_100steps_sparso_0_5.pth"
 
@@ -56,7 +39,7 @@ def main():
     print(f"Loaded model from {model_path}")
 
     # Testing parameters
-    num_episodes = 25
+    num_episodes = 50
     episode_length = 100
     Reward_global=0
     success_count=0
@@ -84,7 +67,7 @@ def main():
             if done:
                 break
         
-        if (np.linalg.norm(obs[9:12] - obs[0:3]) < 0.15):
+        if (np.linalg.norm(obs[9:12] - obs[0:3]) < 0.06):
              success_count +=1
 
         Reward_global += episode_reward
@@ -92,7 +75,7 @@ def main():
     
     with open(log_file, mode='a', newline='') as f:
             writer = csv.writer(f)
-            writer.writerow([num_ep,Reward_global/num_episodes, success_count, 25/success_count ])
+            writer.writerow([num_ep,Reward_global/num_episodes, success_count, success_count ])
 
 if __name__ == "__main__":
     main()
