@@ -2,7 +2,7 @@
 build/
 checkpoints/train_8/
 *.pkl
-*pth
+*.pth
 
 install/
 
