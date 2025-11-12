@@ -1,23 +1,3 @@
-'''
-Author: David Valencia
-Date: 12 / 08 /2021
-Describer: 
-		   Client Node 
-		   
-		   This script is a client node. I use this to change the sphere's position in Gazebo.
-		   The server is '/gazebo/set_entity_state', and it runs automatically when gazebo stars
-		   because I include the gazebo_ros_state plugin in my world file.
-
-		   This client sends a request to the service to change the position on the sphere. 
-		   
-		   Basically, it sends the position in X, Y, Z where I want to put the sphere. For now,  
-		   every time that the node is running sent a random position and wait for the confirmation. 
-		
-		   Executable name in the setup file: my_client_node
-
-'''
-
-import sys
 import rclpy
 from rclpy.node import Node
 from gazebo_msgs.srv import SetEntityState
@@ -47,11 +27,6 @@ class MyNodeClient(Node):
 		
 		self.req.state.name = 'my_sphere'
 		self.req.state.reference_frame = 'world'
-		sphere_position_x = random.uniform( -0.5, 0.5)
-		sphere_position_y = random.uniform( -0.8, -1)
-		sphere_position_z = random.uniform( 0.5, 0.5)
-		
-		# Future is a value that indicates whether the call and response is finished, after sending a request to a service
 
 		self.future = self.client_.call_async(self.req)
 

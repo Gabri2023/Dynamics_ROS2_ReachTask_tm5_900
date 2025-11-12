@@ -1,17 +1,3 @@
-'''
-
-Author: David Valencia
-Date: 07/ 04 /2022
-
-Describer: 
-		
-		This script runs a specific number of episodes where random actions are performed. 
-		The robot will move using those actions and the state, reward and next state (the state after performing the actions)
-		are saved in a txt file (one for each variable). This script imports the main environment automatically. 
-
-		Executable name in the setup file:data_collection
-'''
-
 import sys
 import time
 import rclpy

@@ -1,24 +1,5 @@
-
-'''
-
-Author: David Valencia
-Date: 11 / 08 /2021
-
-Describer: 
-
-		   This script does two things; Receives (subcriber) the position of the sphere from 
-		   Gazebo using the topic: '/gazebo/model_states'. 
-		   Then it  publishes that position in the topic: 'marker_position' ; that topic updates the position 
-		   of a  Marker (sphere) in rviz (just rviz NOT gazebo). A Marker was used because 
-		   it was easier to work in RViz. The mark represents a goal in RViz
-
-		   Executable name in the setup file: reader_mark_node
-'''
-
-
-import rclpy                 # The ROS2 Python library
-from rclpy.node import Node  # Import the Node module and Enables the use of rclpy's Node class
-from std_msgs.msg import String  
+import rclpy                 
+from rclpy.node import Node 
 from gazebo_msgs.msg import ModelStates
 from visualization_msgs.msg import Marker
 

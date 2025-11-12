@@ -1,18 +1,3 @@
-'''
-
-Describer:  
-			
-			This scrip LOAD and START a basic joint_trajectory_controller
-			The info and configuration of the controller can be found in the config folder:
-			
-			/src/tm5_900/config/simple_controller.yaml
-
-			Note: I remove rviz here in order to using an other rviz config later on my own environment 
-                  Also, gazebo and the empty world are launched in my own environment later 
-
-			--> I will invoke this launch file later in my environment launch file <--
-'''
-
 import os
 from launch_ros.actions import Node
 from launch import LaunchDescription

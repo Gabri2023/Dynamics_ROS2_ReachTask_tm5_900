@@ -1,24 +1,6 @@
-
-'''
-
-Describer:  This script lauchs (spawn) the sphere in gazebo using a sdf file. 
-            Just much easier using a SDF here.
-            the sdf could be found in /src/my_sphere_pkg/models/sdf/sphere_goal
-
-            The node_mark (coordinate_node.py)reads the position on the sphere and publishes on a topic /marker_position
-
-            --> I will invoke this launch file later in my environment launch file <--
-
-            Note: I remove rviz here in order to using an other rviz config later on my own environment 
-                  Also, gazebo and the empty world are launched in my own environment later 
-
-'''
-
 import os
 from launch_ros.actions import Node
 from launch import LaunchDescription
-from launch.actions import ExecuteProcess
-from launch.substitutions import LaunchConfiguration
 
 from ament_index_python.packages import get_package_share_directory
 

@@ -3,8 +3,7 @@ from gymnasium import spaces
 import numpy as np
 import rclpy
 
-from my_environment_pkg.main_rl_environment_3 import MyRLEnvironmentNode  
-import time
+from my_environment_pkg.main_rl_environment_3 import MyRLEnvironmentNode 
 
 
 class MyGymEnv(gym.Env):

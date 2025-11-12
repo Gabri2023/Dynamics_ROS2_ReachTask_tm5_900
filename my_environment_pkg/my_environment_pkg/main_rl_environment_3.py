@@ -1,18 +1,3 @@
-'''
-Author: David Valencia
-Date: 07/ 04 /2022
-
-Modification: 07/ 04 /2022
-Refactor (Delta Control): 29/ 10 /2025
-
-Describer: 
-
-        Main environment v2.0
-        Refactored to use delta/incremental actions for stable RL training.
-'''
-
-import os
-import sys
 import time
 import rclpy
 import random

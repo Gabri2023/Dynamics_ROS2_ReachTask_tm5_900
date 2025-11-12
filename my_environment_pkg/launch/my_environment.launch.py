@@ -1,20 +1,3 @@
-'''
-
-Describer:  
-			This is the main launch file for my environment simulation. 
-			
-			
-			Here start the simulation and call the previously developed launch of both sphere and 
-			robot arm and spawn them together in a GAZEBO. 
-			
-			tm5_900 --> my_doosan_controller.launch.py
-			my_sphere_pkg --> my_sphere.launch.py
-				
-			Just call the launch files, for details of config please go to the sphere pkg or Doosan pkg 
-
-			To avoid errors, I start rviz in another terminal manually  
-'''
-
 import os
 from launch import LaunchDescription
 from launch_ros.actions import Node
@@ -29,7 +12,6 @@ def generate_launch_description():
 
 	my_sphere_files       = get_package_share_directory('my_sphere_pkg')
 	my_doosan_robot_files = get_package_share_directory('tm5_900')
-	my_environmets_files  = get_package_share_directory('my_environment_pkg')
 
 	# Start doosan robot and controller
 	doosan_robot = IncludeLaunchDescription(PythonLaunchDescriptionSource(my_doosan_robot_files + '/launch/my_doosan_controller.launch.py')) 
