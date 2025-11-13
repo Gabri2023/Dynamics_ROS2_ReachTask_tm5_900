@@ -8,7 +8,7 @@ import numpy as np
 import torch
 from .models.sac_agent import SAC
 from .utils.model_saver import load_agent
-from .run_environment_2 import MyGymEnv
+from .run_environment import MyGymEnv
 import csv
 import os
 from gymnasium.envs.registration import register

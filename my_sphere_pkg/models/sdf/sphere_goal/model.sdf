@@ -36,25 +36,21 @@
         </geometry>
 
         <material>
-          <lighting>1</lighting>
-          <script>
-            <uri>file://media/materials/scripts/gazebo.material</uri>
-            <name>Gazebo/Green</name>
-          </script>
-          <shader type='vertex'>
-            <normal_map>__default__</normal_map>
-          </shader>
-          <ambient>0 1 0 1</ambient>
-          <diffuse>0 1 0 1</diffuse>
-          <specular>0 1 0 1</specular>
-          <emissive>0 1 0 1</emissive>
+          <ambient>0.9 0.7 0.1 1.0</ambient>
+          <diffuse>0.9 0.7 0.1 1.0</diffuse>
+          <pbr>
+            <metal>
+              <metalness>1.0</metalness>
+              <roughness>0.2</roughness>
+            </metal>
+          </pbr>
         </material>
 
         <transparency>0</transparency>
         <cast_shadows>1</cast_shadows>
       </visual>
       
-    </link>
+      </link>
     <static>0</static>
     <allow_auto_disable>1</allow_auto_disable>
   </model>

@@ -25,19 +25,6 @@ class MyGymEnv(gym.Env):
         # Osservazione: posizione effettore, posizioni giunti, posizione bersaglio
         self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(12,), dtype=np.float32)
         
-
-        '''
-    def reset(self, seed=None, options=None):
-       
-        super().reset(seed=seed)
-        self.node.reset_environment_request()
-        
-        rclpy.spin_once(self.node, timeout_sec=0.1)
-
-        obs = self.node.state_space_funct()
-        self.node.collision = False
-
-        return np.array(obs, dtype=np.float32), {}'''
     
     
     def reset(self, seed=None, options=None):

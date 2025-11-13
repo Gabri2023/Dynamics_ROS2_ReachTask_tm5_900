@@ -2,7 +2,7 @@ import os
 from glob import glob
 from setuptools import setup
 
-package_name = 'my_sphere_pkg'
+package_name = 'my_obstacle_pkg'
 
 setup(
     name=package_name,
@@ -14,7 +14,7 @@ setup(
         ('share/' + package_name, ['package.xml']),
         (os.path.join('share', package_name, 'launch'), glob(os.path.join('launch', '*.launch.py'))),
         (os.path.join('share', package_name, 'worlds'), glob(os.path.join('worlds', '*.world'))),
-        (os.path.join('share', package_name, 'models', 'sdf', 'sphere_goal'), glob(os.path.join('models','sdf','sphere_goal', '*.*'))),
+        (os.path.join('share', package_name, 'models', 'sdf', 'obstacle_goal'), glob(os.path.join('models','sdf','obstacle_goal', '*.*'))),
         (os.path.join('share', package_name, 'models', 'urdf'), glob(os.path.join('models','urdf', '*.urdf'))),
 
     ],
@@ -26,7 +26,7 @@ setup(
     license='TODO: License declaration',
     tests_require=['pytest'],
     entry_points={
-        'console_scripts': [
+        'console_scripts': [ 
             
         ],
     },

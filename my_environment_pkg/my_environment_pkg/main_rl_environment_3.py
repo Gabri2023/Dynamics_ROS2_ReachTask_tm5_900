@@ -101,13 +101,13 @@ class MyRLEnvironmentNode(Node):
 
         #----------- Bumper Sensors
         self.bumper_links = [
-                       "my_doosan_robot::wrist_1_link::wrist_1_link_collision",
-                       "my_doosan_robot::wrist_2_link::wrist_2_link_collision", 
-                       "my_doosan_robot::wrist_3_link::wrist_3_link_collision", 
-                       "my_doosan_robot::flange_link::flange_link_collision", 
-                       "my_doosan_robot::arm_1_link::arm_1_link_collision",
-                       "my_doosan_robot::arm_2_link::arm_2_link_collision",
-                       "my_doosan_robot::shoulder_1_link::shoulder_1_link_collision",
+                       "tm5_900::wrist_1_link::wrist_1_link_collision_collision",
+                       "tm5_900::wrist_2_link::wrist_2_link_collision_collision", 
+                       "tm5_900::wrist_3_link::wrist_3_link_collision_collision", 
+                       "tm5_900::flange_link::flange_link_collision_collision", 
+                       "tm5_900::arm_1_link::arm_1_link_collision_collision",
+                       "tm5_900::arm_2_link::arm_2_link_collision_collision",
+                       "tm5_900::shoulder_1_link::shoulder_1_link_collision_collision",
                        # Aggiungi qui altri link se necessario
                        ]
         
@@ -136,7 +136,13 @@ class MyRLEnvironmentNode(Node):
                 10
             )
             self.bumper_subscriptions.append(subscription)
-        # ---> FINE MODIFICA
+        # ---> FINE MODIFICA '''
+        '''
+        self.sub = self.create_subscription(
+            ContactsState,
+            '/gazebo/default/physics/contacts',
+            self.contact_state_callback,
+            10 )'''
 
 
         # --------------------------Client for reset the sphere position --------------------------#
@@ -170,13 +176,15 @@ class MyRLEnvironmentNode(Node):
             for state in msg.states:
                 name1 = state.collision1_name
                 name2 = state.collision2_name
+                print(name1,name2)
+                
 
                 # Se uno dei due nomi contiene uno dei tuoi link bumper
                 for bumper in self.bumper_links:
                     if bumper in name1 or bumper in name2:
                         self.collision = True
                         self.get_logger().warn(f'COLLISIONE RILEVATA TRA: {name1} e {name2}')
-                        return # Esci appena trovi la prima collisione
+                return # Esci appena trovi la prima collisione
 
 
 

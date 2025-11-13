@@ -4,11 +4,13 @@
 
 source /opt/ros/foxy/setup.bash
 colcon build && install/setup.bash
-(da fare in due terminali)
+(da fare in due terminali diversi)
 
-ros2 launch my_environment_pkg my_environment.launch.py
+ros2 launch my_environment_pkg my_environment.launch.py (senza ostacoli)
+ros2 launch my_environment_pkg my_environment_obs.launch.py (con ostacoli)
 
-- per il train (nell'altro terminale) ros2 run my_environment_pkg run_environment_2
+
+- per il train (nell'altro terminale) ros2 run my_environment_pkg run_environment
 - per il test  (nell'altro terminale) ros2 run my_environment_pkg test_agent
 
 

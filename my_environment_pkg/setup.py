@@ -26,7 +26,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'run_environment_2 = my_environment_pkg.run_environment_2:main',
+            'run_environment = my_environment_pkg.run_environment:main',
             'test_agent = my_environment_pkg.test_agent:main',
         ],
     },

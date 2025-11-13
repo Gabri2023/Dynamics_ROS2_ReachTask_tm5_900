@@ -95,7 +95,7 @@
           <color rgba="0.5 0.5 0.5 1.0" />
         </material>
       </visual>
-      <collision>
+      <collision name="base_link_collision">
         <geometry>
           <mesh filename="$(find tm5_900)/description/desc_tm900/meshes/tm5_900/collision/tm5_base_c.stl" />
         </geometry>
@@ -128,7 +128,7 @@
           <color rgba="0.3 0.3 0.25 1.0" />
         </material>
       </visual>
-      <collision>
+      <collision name="shoulder_1_link_collision">
         <geometry>
           <mesh filename="$(find tm5_900)/description/desc_tm900/meshes/tm5_900/collision/tm_400w_01_c.stl" />
         </geometry>
@@ -161,7 +161,7 @@
           <color rgba="0.3 0.3 0.25 1.0" />
         </material>
       </visual>
-      <collision>
+      <collision name="arm_1_link_collision">
         <geometry>
           <mesh filename="$(find tm5_900)/description/desc_tm900/meshes/tm5_900/collision/tm5_900_arm1_c.stl" />
         </geometry>
@@ -194,7 +194,7 @@
           <color rgba="0.3 0.3 0.25 1.0" />
         </material>
       </visual>
-      <collision>
+      <collision name="arm_2_link_collision">
         <geometry>
           <mesh filename="$(find tm5_900)/description/desc_tm900/meshes/tm5_900/collision/tm5_900_arm2_c.stl" />
         </geometry>
@@ -227,7 +227,7 @@
           <color rgba="0.3 0.3 0.25 1.0" />
         </material>
       </visual>
-      <collision>
+      <collision name="wrist_1_link_collision">
         <geometry>
           <mesh filename="$(find tm5_900)/description/desc_tm900/meshes/tm5_900/collision/tm_100w_01_c.stl" />
         </geometry>
@@ -260,7 +260,7 @@
           <color rgba="0.3 0.3 0.25 1.0" />
         </material>
       </visual>
-      <collision>
+      <collision name="wrist_2_link_collision">
         <geometry>
           <mesh filename="$(find tm5_900)/description/desc_tm900/meshes/tm5_900/collision/tm_100w_02_c.stl" />
         </geometry>
@@ -293,7 +293,7 @@
           <color rgba="0.5 0.5 0.5 1.0" />
         </material>
       </visual>
-      <collision>
+      <collision name="wrist_3_link_collision">
         <geometry>
           <mesh filename="$(find tm5_900)/description/desc_tm900/meshes/tm5_900/collision/tm_ee_c.stl" />
         </geometry>
@@ -310,7 +310,7 @@
     </joint>
 
     <link name="flange_link">
-    </link>
+  </link>
 
     <!-- ROS base to TM 'base_link' Coordinates transform -->
     <link name="base" />

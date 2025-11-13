@@ -3,13 +3,10 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 import gymnasium as gym
-import gymnasium_robotics
-import numpy as np
-import torch
 from my_environment_pkg.models.sac_agent import SAC
 from my_environment_pkg.utils.model_saver import load_replay_buffer, load_agent, save_agent, save_replay_buffer
 from my_environment_pkg.buffers.her_replay_buffer import HERReplayBuffer
-from my_environment_pkg.run_environment_2 import MyGymEnv
+from my_environment_pkg.run_environment import MyGymEnv
 import csv
 
 from gymnasium.envs.registration import register
