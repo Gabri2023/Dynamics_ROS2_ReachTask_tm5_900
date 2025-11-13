@@ -16,10 +16,11 @@ ros2 launch my_environment_pkg my_environment.launch.py (*senza ostacoli*)
 
 ros2 launch my_environment_pkg my_environment_obs.launch.py (*con ostacoli*)
 
+**AVVIO TRAIN/TEST** (nel SECONDO terminale)
 
-- per il *train* (nel SECONDO terminale) ros2 run my_environment_pkg run_environment
+- per il *train*  ros2 run my_environment_pkg run_environment
   
-- per il *test*  (nel SECONDO terminale) ros2 run my_environment_pkg test_agent
+- per il *test*   ros2 run my_environment_pkg test_agent
 
 
 nei file train_agent.py e test_agent.py bisogna inserire il path dei pesi che si desidera usare. I pesi si trovano nella cartella esterna "checkpoints/train_8", dove si trova anche il file "Monitoraggio.csv" che contiene lo storico dell'evoluzione dell'apprendimento del robot.
