@@ -2,12 +2,12 @@
 
 # CODICI PER AVVIO TRAIN E TEST
 
-*PREPARAZIONE TERMINALI*
+**PREPARAZIONE TERMINALI**
 source /opt/ros/foxy/setup.bash
 colcon build && install/setup.bash
 (da fare in due terminali diversi)
 
-*AVVIO GAZEBO* (nel PRIMO terminale)
+**AVVIO GAZEBO** (nel PRIMO terminale)
 
 ros2 launch my_environment_pkg my_environment.launch.py (*senza ostacoli*)
 
