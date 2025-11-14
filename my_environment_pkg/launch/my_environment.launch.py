@@ -33,7 +33,7 @@ def generate_launch_description():
     # 'IncludeLaunchDescription' è un'azione che permette di lanciare *un altro* file di lancio.
     # Stiamo includendo il file 'my_doosan_controller.launch.py' dal pacchetto 'tm5_900'.
     doosan_robot = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(my_doosan_robot_files + '/launch/my_doosan_controller.launch.py')
+        PythonLaunchDescriptionSource(my_doosan_robot_files + '/launch/my_tm5_900_controller.launch.py')
     ) 
     
     # 3. Prepara il lancio della Sfera
