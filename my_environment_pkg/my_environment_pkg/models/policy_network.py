@@ -1,3 +1,21 @@
+"""
+Riassunto del Codice: Policy Network per Agente Soft Actor-Critic (SAC)
+
+Questo modulo definisce la classe **PolicyNetwork**, che funge da attore (Actor)
+all'interno dell'algoritmo SAC. Implementa una policy stocastica gaussiana, dove il network
+apprende i parametri statistici (media e deviazione standard) della distribuzione
+delle azioni.
+
+Caratteristiche Principali:
+1.  **Struttura:** Network feedforward a due strati nascosti (256 neuroni).
+2.  **Output:** Genera sia la media (`mean`) che la deviazione standard logaritmica
+    (`log_std`) della distribuzione Gaussiana.
+3.  **Reparameterization Trick:** Il metodo `sample` utilizza il *reparameterization trick*
+    e la funzione di attivazione `tanh` (squashing) per generare azioni all'interno di
+    un intervallo limitato [-1, 1], calcolando anche la log-probabilità corretta.
+"""
+
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F

@@ -1,3 +1,15 @@
+"""
+Riassunto del Codice: Replay Buffer con Hindsight Experience Replay (HER)
+
+Questo modulo definisce la classe **ReplayBuffer**, un componente fondamentale per l'addestramento off-policy in Reinforcement Learning. È specificamente progettato per implementare la strategia **Hindsight Experience Replay (HER)**.
+
+Funzionalità Principali:
+1.  **Memorizzazione:** Memorizza l'esperienza dell'agente (transizioni e traiettorie complete).
+2.  **Campionamento HER:** Durante il campionamento di un batch, la classe implementa la logica HER, sostituendo l'obiettivo desiderato (`g`) di una transizione con un obiettivo raggiunto (`ag`) selezionato casualmente dal futuro dello stesso episodio.
+3.  **Supporto HER:** La struttura del buffer è adattata per gestire lo stato, l'azione, la ricompensa e i segnali 'done', inclusa la gestione esplicita degli obiettivi raggiunti e desiderati.
+"""
+
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F

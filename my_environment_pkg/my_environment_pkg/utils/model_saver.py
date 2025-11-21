@@ -1,3 +1,19 @@
+"""
+Riassunto del Codice: Utility di Salvataggio e Caricamento per Agente SAC e Replay Buffer
+
+Questo modulo fornisce funzioni ausiliarie per la persistenza dei dati, essenziali
+per l'addestramento e il testing degli agenti di Reinforcement Learning.
+
+Funzionalità Principali:
+1.  **save_agent/load_agent:** Gestiscono il salvataggio e il caricamento dello stato
+    completo di un agente SAC (Soft Actor-Critic), inclusi i network di policy e Q-function,
+    i loro ottimizzatori, e i parametri di auto-tuning dell'entropia (alpha). Utilizza `torch.save`.
+2.  **save_replay_buffer/load_replay_buffer:** Gestiscono il salvataggio e il caricamento
+    del buffer di replay contenente l'esperienza dell'agente. Utilizza la serializzazione
+    `pickle`.
+"""
+
+
 import torch
 import pickle
 import os

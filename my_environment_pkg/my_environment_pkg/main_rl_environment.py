@@ -1,67 +1,104 @@
+"""
+Riassunto del Codice: Nodo ROS 2 per Ambiente di Reinforcement Learning (RL)
+
+Questo codice definisce un nodo ROS 2 (MyRLEnvironmentNode) essenziale per l'interazione
+tra un algoritmo di Reinforcement Learning (RL) e un simulatore robotico (Gazebo)
+che utilizza un braccio robotico (TM5-900).
+
+Funzionalità Principali:
+1.  Monitoraggio Stato: Sottoscrive i topic di ROS 2 (JointState, ModelStates, Contatti) per ottenere
+    la posizione dei giunti, la posizione dell'End-Effector e la posizione dell'oggetto target ('my_sphere').
+2.  Azioni di Step: Implementa la logica per eseguire un'azione (cambio di posizione dei giunti)
+    utilizzando l'Action Client 'FollowJointTrajectory', applicando i limiti fisici del robot.
+3.  Reset: Fornisce una funzione per resettare l'ambiente (spostando la sfera target in una
+    nuova posizione casuale e riportando il robot nella posizione 'Home').
+4.  Reward: Calcola la funzione di ricompensa (reward) basata sulla distanza
+    tra l'End-Effector e la sfera, includendo penalità per collisioni o uscite dai limiti di lavoro.
+"""
+
+# Importa moduli standard Python.
 import time
+# Importa la libreria client ROS 2 Python.
 import rclpy
+# Usato per generare posizioni casuali per il reset della sfera.
 import random
+# Usato per calcoli numerici e manipolazione di array (es. limiti dei giunti, distanza).
 import numpy as np
+# Usato per la sincronizzazione temporale dei messaggi di più topic.
 import message_filters
+# Classe base per i nodi ROS 2.
 from rclpy.node import Node
+# Messaggio per lo stato dei giunti (posizione, velocità, ecc.).
 from sensor_msgs.msg import JointState
+# Messaggio per la posizione dei modelli in Gazebo (usato per la sfera target).
 from gazebo_msgs.msg import ModelStates
+# Servizio ROS 2 per reimpostare la posizione di un'entità in Gazebo (usato per la sfera).
 from gazebo_msgs.srv import SetEntityState
 
+# Usato per la gestione delle trasformazioni (End-Effector vs World).
 import tf2_ros 
+# Eccezione sollevata se una trasformazione fallisce.
 from tf2_ros import TransformException
 
+# Usato per interagire con l'Action Server del controller di traiettoria.
 from rclpy.action        import ActionClient
+# Punto di una traiettoria per i giunti.
 from trajectory_msgs.msg import JointTrajectoryPoint
+# Action ROS 2 standard per il controllo della traiettoria dei giunti.
 from control_msgs.action import FollowJointTrajectory
 
+# Usato per definire durate temporali (timeout, time_from_start).
 from rclpy.duration import Duration
+# Messaggio per rilevare lo stato dei contatti (collisioni).
 from gazebo_msgs.msg import ContactsState
 
 
-
-
+# Definizione del nodo ROS 2 che funge da interfaccia tra RL e simulazione.
 class MyRLEnvironmentNode(Node):
 
+    # Costruttore della classe, inizializza tutte le variabili di stato, i client, i subscriber e i listener.
     def __init__ (self):
 
+        # Inizializza il nodo ROS 2 con il nome specificato.
         super().__init__('node_main_rl_environment')
 
+        # Flag per segnalare all'agente RL esterno che lo stato è stato aggiornato.
         self.state_updated_flag = False
 
-        
+        # Fattore di scala per l'azione ricevuta dall'agente RL (delta di posizione massima).
         self.action_step_size = 0.5 
 
-        # Limiti dei giunti (presi dal tuo URDF)
-        # NOTA: I polsi nel tuo URDF erano bloccati a 0.0. Li ho sbloccati 
-        # a +/- 3.14 (180 gradi) per un controllo reale. 
-        # AGGIUSTA QUESTI VALORI se i tuoi limiti reali sono diversi.
+        
         # Ordine: [shoulder_1, shoulder_2, elbow, wrist_1, wrist_2, wrist_3]
         pi = 3.14159
+        # Definizione dei limiti minimi di movimento per ciascuno dei 6 giunti in radianti.
         self.joint_limits_min = np.array([
             -180*pi/180,  # shoulder_1_lower_limit
              -90*pi/180,  # shoulder_2_lower_limit
             -155*pi/180,  # elbow_lower_limit
-            -90*pi/180,        # wrist_1 (sbloccato)
-            -90*pi/180,        # wrist_2 (sbloccato)
-            -90*pi/180         # wrist_3 (sbloccato)
+            -90*pi/180,        # wrist_1_lower_limit 
+            -90*pi/180,        # wrist_2_lower_limit
+            -90*pi/180         # wrist_3_lower_limit
         ], dtype=np.float32)
         
+        # Definizione dei limiti massimi di movimento per ciascuno dei 6 giunti in radianti.
         self.joint_limits_max = np.array([
              180*pi/180,  # shoulder_1_upper_limit
               90*pi/180,  # shoulder_2_upper_limit
              155*pi/180,  # elbow_upper_limit
-             90*pi/180,        # wrist_1 (sbloccato)
-             90*pi/180,        # wrist_2 (sbloccato)
-             90*pi/180         # wrist_3 (sbloccato)
+             90*pi/180,        # wrist_1_upper_limit
+             90*pi/180,        # wrist_2_upper_limit
+             90*pi/180         # wrist_3_upper_limit
         ], dtype=np.float32)
 
-        # ---> FINE MODIFICA
+        # Fine blocco di modifica.
 
+        # Coordinate dell'End-Effector nel frame 'world'.
         self.robot_x = 0.0
         self.robot_y = 0.0
         self.robot_z = 0.0
 
+        # Variabili per memorizzare la posizione attuale di ciascun giunto.
         # Posizioni attuali
         self.joint_1_pos = 0.0
         self.joint_2_pos = 0.0
@@ -70,6 +107,7 @@ class MyRLEnvironmentNode(Node):
         self.joint_5_pos = 0.0
         self.joint_6_pos = 0.0
 
+        # Variabili per memorizzare la posizione dei giunti allo step precedente (per penalità jerk/movimento).
         # Posizioni step precedente (per penalità jerk)
         self.prev_joint_1_pos = 0.0
         self.prev_joint_2_pos = 0.0
@@ -78,6 +116,7 @@ class MyRLEnvironmentNode(Node):
         self.prev_joint_5_pos = 0.0
         self.prev_joint_6_pos = 0.0
 
+        # Variabili per memorizzare la velocità attuale di ciascun giunto.
         # Velocità attuali (se servono)
         self.joint_1_vel = 0.0
         self.joint_2_vel = 0.0
@@ -86,19 +125,26 @@ class MyRLEnvironmentNode(Node):
         self.joint_5_vel = 0.0
         self.joint_6_vel = 0.0
 
+        # Coordinate della sfera target 'my_sphere' nel frame 'world'.
         self.pos_sphere_x = 0.0
         self.pos_sphere_y = 0.0
         self.pos_sphere_z = 0.0
 
+        # Flag che indica se è stata rilevata una collisione.
         self.collision = False
+        # Flag che indica se il nodo ha ricevuto i dati iniziali ed è pronto per l'RL.
         self.node_ready = False  
 
         print ("initializing.....")
         
+        # Inizializzazione del listener per le trasformazioni TF (usato per ottenere la posizione dell'end-effector).
         # end-effector transformation
+        # Buffer per memorizzare le trasformazioni TF.
         self.tf_buffer   = tf2_ros.Buffer()
+        # Listener per le trasformazioni (per ottenere la posa dell'End-Effector).
         self.tf_listener = tf2_ros.TransformListener(self.tf_buffer, self)
 
+        # Lista dei nomi dei link del robot da monitorare per le collisioni.
         #----------- Bumper Sensors
         self.bumper_links = [
                        "tm5_900::wrist_1_link::wrist_1_link_collision_collision",
@@ -111,11 +157,13 @@ class MyRLEnvironmentNode(Node):
                        # Aggiungi qui altri link se necessario
                        ]
         
-        # ---> INIZIO MODIFICA: Correzione bug iscrizioni multiple
+        # Inizio blocco di modifica: Correzione bug iscrizioni multiple
         # Salviamo le iscrizioni in una lista per evitare che vengano sovrascritte
         self.bumper_subscriptions = [] 
+        # Variabile per memorizzare l'ultimo stato di contatto ricevuto.
         self.contact_state = None
         
+        # Lista dei topic dei sensori di contatto (bumper) a cui iscriversi.
         # Lista dei topic dei bumper a cui iscriversi
         bumper_topics = [
             '/contact_sensor/bumper_flange_link',
@@ -128,6 +176,7 @@ class MyRLEnvironmentNode(Node):
             # Aggiungi qui altri topic se necessario
         ]
         
+        # Creazione delle sottoscrizioni per ogni topic di contatto.
         for topic in bumper_topics:
             subscription = self.create_subscription(
                 ContactsState,
@@ -136,7 +185,7 @@ class MyRLEnvironmentNode(Node):
                 10
             )
             self.bumper_subscriptions.append(subscription)
-        # ---> FINE MODIFICA '''
+        # Fine blocco di modifica. '''
         '''
         self.sub = self.create_subscription(
             ContactsState,
@@ -145,29 +194,36 @@ class MyRLEnvironmentNode(Node):
             10 )'''
 
 
+        # Client per il servizio di reset della posizione della sfera in Gazebo.
         # --------------------------Client for reset the sphere position --------------------------#
         self.client_reset_sphere = self.create_client(SetEntityState,'/gazebo/set_entity_state')
+        # Attesa che il servizio sia disponibile.
         while not self.client_reset_sphere.wait_for_service(timeout_sec=0.2):
             self.get_logger().info('sphere reset-service not available, waiting...')
         self.request_sphere_reset = SetEntityState.Request()
 
 
+        # Action Client per inviare comandi di traiettoria al robot.
         # ------------------------- Action-client to change joints position -----------------------#
         self.trajectory_action_client = ActionClient (self, FollowJointTrajectory, '/joint_trajectory_controller/follow_joint_trajectory')
 
 
+        # Subscriber per lo stato dei giunti e della sfera.
         # --------------------------Subcribers topics --------------------------------------------#
         self.joint_state_subscription = message_filters.Subscriber(self, JointState, '/joint_states')
         self.target_point_subscription = message_filters.Subscriber(self, ModelStates, '/gazebo/model_states')
 
+        # Sincronizzatore temporale approssimativo per combinare i messaggi.
         self.ts = message_filters.ApproximateTimeSynchronizer([self.joint_state_subscription, self.target_point_subscription], queue_size=10, slop=0.1, allow_headerless=True)
+        # Registra la callback che viene chiamata quando i messaggi sincronizzati arrivano.
         self.ts.registerCallback(self.initial_callback)
 
 
-
+    # Callback che elabora i messaggi ContactsState per rilevare collisioni.
     def contact_state_callback(self, msg):
         self.contact_state = msg
         
+        # Previene l'elaborazione se una collisione è già stata registrata (per evitare log multipli).
         # Se stiamo già gestendo una collisione, non fare nulla
         if self.collision:
             return
@@ -179,6 +235,7 @@ class MyRLEnvironmentNode(Node):
                 print(name1,name2)
                 
 
+                # Itera sui link monitorati per verificare se una collisione li coinvolge.
                 # Se uno dei due nomi contiene uno dei tuoi link bumper
                 for bumper in self.bumper_links:
                     if bumper in name1 or bumper in name2:
@@ -187,9 +244,10 @@ class MyRLEnvironmentNode(Node):
                 return # Esci appena trovi la prima collisione
 
 
-
+    # Callback che aggiorna le variabili di stato interno del robot e del target.
     def initial_callback(self, joint_state_msg, target_point_msg):
 
+        # Salva la posizione corrente come "precedente" prima di aggiornarla con il nuovo stato.
         # 1. Salva la posizione corrente come "precedente" (per penalità jerk)
         #    Questo deve essere fatto PRIMA di aggiornare i valori.
         self.prev_joint_1_pos = self.joint_1_pos
@@ -199,7 +257,7 @@ class MyRLEnvironmentNode(Node):
         self.prev_joint_5_pos = self.joint_5_pos
         self.prev_joint_6_pos = self.joint_6_pos
 
-        # ---> INIZIO MODIFICA: Correzione ordine lettura giunti
+        # Inizio blocco di modifica: Correzione ordine lettura giunti
         # Assumiamo che l'ordine in /joint_states sia:
         # [shoulder_1, shoulder_2, elbow, wrist_1, wrist_2, wrist_3]
         # Se l'ordine è diverso, devi stamparlo con `ros2 topic echo /joint_states`
@@ -234,8 +292,9 @@ class MyRLEnvironmentNode(Node):
             self.get_logger().error(f"Errore: Giunto non trovato in /joint_states. Messaggio: {e}")
             self.get_logger().error(f"Giunti ricevuti: {joint_state_msg.name}")
             return
-        # ---> FINE MODIFICA
+        # Fine blocco di modifica.
 
+        # Trova l'indice della sfera target nel messaggio ModelStates.
         # Determine the sphere position in Gazebo wrt world frame
         try:
             sphere_index = target_point_msg.name.index('my_sphere')
@@ -249,6 +308,7 @@ class MyRLEnvironmentNode(Node):
             
         self.node_ready = True
 
+        # Aggiorna la posizione dell'end-effector (End-Effector) tramite TF2.
         # Determine the pose(position and location) of the end-effector w.r.t. world frame
         self.robot_x, self.robot_y, self.robot_z = self.get_end_effector_transformation()
         
@@ -257,12 +317,13 @@ class MyRLEnvironmentNode(Node):
         # self.get_logger().info(f"Pos EF: [{self.robot_x}, {self.robot_y}, {self.robot_z}]")
 
 
-
+    # Funzione che utilizza TF2 per ottenere la posa dell'End-Effector ('flange_link') rispetto al frame 'world'.
     def get_end_effector_transformation(self):
         try:
             now = rclpy.time.Time()
             self.reference_frame = 'world'
             self.child_frame     = 'flange_link'
+            # Esegue la ricerca della trasformazione con un breve timeout.
             trans = self.tf_buffer.lookup_transform(self.reference_frame, self.child_frame, now, timeout=Duration(seconds=0.05))
         except TransformException as ex:
             self.get_logger().debug(f'Could not transform {self.reference_frame} to {self.child_frame}: {ex}')
@@ -276,9 +337,11 @@ class MyRLEnvironmentNode(Node):
 
 
     
+    # Gestisce la logica di reset dell'ambiente all'inizio di un nuovo episodio.
     def reset_environment_request(self, timeout=5.0):
 
         # -------------------- reset sphere position------------------#
+        # Genera una nuova posizione casuale per la sfera target.
         sphere_position_x = random.uniform( -0.5, 0.5)
         sphere_position_y = random.uniform( 0.65, -0.65)
         sphere_position_z = random.uniform( 0.4, 0.75)
@@ -289,8 +352,10 @@ class MyRLEnvironmentNode(Node):
         self.request_sphere_reset.state.pose.position.y = sphere_position_y
         self.request_sphere_reset.state.pose.position.z = sphere_position_z
         
+        # Invia la richiesta asincrona per spostare la sfera.
         self.future_sphere_reset = self.client_reset_sphere.call_async(self.request_sphere_reset)
         self.get_logger().info('Reseting sphere to new position...')
+        # Attende il completamento del servizio di reset della sfera.
         rclpy.spin_until_future_complete(self, self.future_sphere_reset)
         
         try:
@@ -303,16 +368,18 @@ class MyRLEnvironmentNode(Node):
             self.get_logger().error(f"Eccezione durante il reset della sfera: {e}")
 
         #---------------------reset robot position-------------------#
+        # Definisce il punto 'Home' (posizioni a zero) per il reset del robot.
         home_point_msg = JointTrajectoryPoint()
         home_point_msg.positions     = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         home_point_msg.velocities    = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         home_point_msg.accelerations = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-        home_point_msg.time_from_start = Duration(seconds=0.5).to_msg() # Tempo più lungo per un reset sicuro
+        # Tempo più lungo per un reset sicuro
+        home_point_msg.time_from_start = Duration(seconds=0.5).to_msg() 
     
         
-        # ---> INIZIO MODIFICA: Correzione ordine giunti
+        # Inizio blocco di modifica: Correzione ordine giunti
         joint_names = ['shoulder_1_joint','shoulder_2_joint','elbow_joint','wrist_1_joint','wrist_2_joint','wrist_3_joint']
-        # ---> FINE MODIFICA
+        # Fine blocco di modifica.
         
         home_goal_msg = FollowJointTrajectory.Goal()
         home_goal_msg.goal_time_tolerance    = Duration(seconds=0.002).to_msg()
@@ -323,6 +390,7 @@ class MyRLEnvironmentNode(Node):
             self.get_logger().error('Trajectory action server not available!')
             return False # Indica fallimento
         
+        # Invia l'obiettivo di traiettoria per riportare il robot a casa.
         send_home_goal_future = self.trajectory_action_client.send_goal_async(home_goal_msg)
         rclpy.spin_until_future_complete(self, send_home_goal_future)
         goal_reset_handle = send_home_goal_future.result()
@@ -343,14 +411,15 @@ class MyRLEnvironmentNode(Node):
             if result.result.error_code == 0:
                 self.get_logger().info('Robot in Home position without problems')
                 
-                # ---> INIZIO MODIFICA: Reset posizioni precedenti per penalità jerk
+                # Inizio blocco di modifica: Reset posizioni precedenti per penalità jerk
+                # Azzera le posizioni precedenti dopo il reset per il calcolo corretto del jerk nello step successivo.
                 self.prev_joint_1_pos = 0.0
                 self.prev_joint_2_pos = 0.0
                 self.prev_joint_3_pos = 0.0
                 self.prev_joint_4_pos = 0.0
                 self.prev_joint_5_pos = 0.0
                 self.prev_joint_6_pos = 0.0
-                # ---> FINE MODIFICA
+                # Fine blocco di modifica.
                 return True # Successo
             else:
                 self.get_logger().warn(f'Reset robot fallito con codice errore: {result.result.error_code}')
@@ -360,16 +429,18 @@ class MyRLEnvironmentNode(Node):
             return False
 
 
+    # Gestisce l'esecuzione di un'azione (delta di posizione) ricevuta dall'agente RL.
     def action_step_service(self, action_values):
         
         # 'action_values' è un array numpy da 6 elementi (es. da -1 a 1)
+        # La funzione non restituisce nulla, ma invia un goal di traiettoria al controller.
 
         self.state_updated_flag = False
         
         points = []
         point_msg = JointTrajectoryPoint()
 
-        # ---> INIZIO MODIFICA: Logica di controllo Delta (Incrementale)
+        # Inizio blocco di modifica: Logica di controllo Delta (Incrementale)
         
         # 1. Prendi la posizione corrente (in ordine corretto)
         current_pos = np.array([
@@ -378,10 +449,13 @@ class MyRLEnvironmentNode(Node):
         ])
 
         # 2. Calcola il target sommando il delta (azione * step_size)
+        # Calcola il delta di posizione finale applicando il fattore di scala all'azione ricevuta.
         delta_action = action_values * self.action_step_size
+        # Calcola la nuova posizione target sommando il delta alla posizione corrente.
         target_positions = current_pos + delta_action
 
         # 3. Applica i limiti (Clipping) - FONDAMENTALE per stabilità
+        # Limita i target di posizione all'interno dei limiti fisici del giunto (clipping).
         target_positions = np.clip(
             target_positions, 
             self.joint_limits_min, 
@@ -391,23 +465,24 @@ class MyRLEnvironmentNode(Node):
         # 4. Assegna le posizioni target calcolate
         point_msg.positions = list(map(float, target_positions))
         
-        # ---> FINE MODIFICA
+        # Fine blocco di modifica.
 
         # self.get_logger().info(f'TARGET POS: {np.round(point_msg.positions, 2)}')
         
         point_msg.velocities    = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         point_msg.accelerations = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         
-        # ---> INIZIO MODIFICA: Riduci il tempo di step (FONDAMENTALE)
+        # Inizio blocco di modifica: Riduci il tempo di step (FONDAMENTALE)
+        # Imposta un tempo di esecuzione breve per lo step.
         # 4.0 secondi è troppo. Usiamo un tempo breve per step reattivi.
         point_msg.time_from_start = Duration(seconds=0.2).to_msg()
-        # ---> FINE MODIFICA
+        # Fine blocco di modifica.
         
         points.append(point_msg) 
 
-        # ---> INIZIO MODIFICA: Correzione ordine giunti
+        # Inizio blocco di modifica: Correzione ordine giunti
         joint_names = ['shoulder_1_joint','shoulder_2_joint','elbow_joint','wrist_1_joint','wrist_2_joint','wrist_3_joint']
-        # ---> FINE MODIFICA
+        # Fine blocco di modifica.
         
         goal_msg    = FollowJointTrajectory.Goal()
         goal_msg.goal_time_tolerance = Duration(seconds=0.1).to_msg()
@@ -418,6 +493,7 @@ class MyRLEnvironmentNode(Node):
             self.get_logger().error('Action server non disponibile per lo step!')
             return # Salta questo step
             
+        # Invia l'obiettivo di traiettoria per eseguire il passo.
         self.send_goal_future = self.trajectory_action_client.send_goal_async(goal_msg) 
         rclpy.spin_until_future_complete(self, self.send_goal_future )
         goal_handle = self.send_goal_future.result()
@@ -437,12 +513,11 @@ class MyRLEnvironmentNode(Node):
              self.get_logger().error(f'Eccezione durante lo step: {e}')
         
         
+    # Calcola la ricompensa per lo step corrente, usata dall'agente RL.
     def calculate_reward_funct_2(self):
         # ... (Questa funzione è invariata e ora dovrebbe funzionare) ...
         
-        #joint_pos = np.array((self.joint_1_pos, self.joint_2_pos, self.joint_3_pos,self.joint_4_pos,self.joint_5_pos,self.joint_6_pos ))
-        #prev_joint_pos = np.array((self.prev_joint_1_pos, self.prev_joint_2_pos, self.prev_joint_3_pos, self.prev_joint_4_pos, self.prev_joint_5_pos, self.prev_joint_6_pos))
-
+       
         try:
             robot_end_position    = np.array((self.robot_x, self.robot_y, self.robot_z))
             target_point_position = np.array((self.pos_sphere_x, self.pos_sphere_y, self.pos_sphere_z))
@@ -460,9 +535,11 @@ class MyRLEnvironmentNode(Node):
             done = True
             return reward_d, done
         else:
+            # Calcola la distanza euclidea tra l'End-Effector e la sfera target.
             distance = np.linalg.norm(robot_end_position - target_point_position)
             print ("###----DISTANZA---", distance)
 
+            # Criterio di successo: la distanza è inferiore a una soglia.
             if distance <= 0.06:
                 self.get_logger().info('### Goal Reached ###')
                 done = True
@@ -471,22 +548,15 @@ class MyRLEnvironmentNode(Node):
                 done = False
                 reward_d = reward_scale * -1
 
-        # Calcolo penalità Jerk
-        #jerk_norm = np.linalg.norm(joint_pos - prev_joint_pos)
-        # print('jernorm', jerk_norm)
-        # print('distanze', joint_pos, prev_joint_pos, joint_pos - prev_joint_pos)
-
-        #K_JERK = 0.5
-        #jerk_penalty = -K_JERK * jerk_norm
-        
-        #total_reward = reward_d + jerk_penalty
 
         return reward_d, done
 
 
+    # Crea il vettore di stato (osservazione) finale per l'agente RL (12 elementi).
     def state_space_funct(self):
     # ... (Questa funzione è invariata) ...
         try:
+            # Vettore di stato contenente posizione EF, posizioni giunti e posizione target.
             state = [
                 float(self.robot_x), float(self.robot_y), float(self.robot_z),
                 float(self.joint_1_pos), float(self.joint_2_pos), float(self.joint_3_pos),

@@ -1,14 +1,24 @@
-import gymnasium
-import gymnasium_robotics
+"""
+Riassunto del Codice: Agente Soft Actor-Critic (SAC) con Hindsight Experience Replay (HER)
 
+Questo modulo definisce la classe **SAC**, l'agente di Reinforcement Learning che implementa
+l'algoritmo Soft Actor-Critic. SAC è un metodo che massimizza sia la ricompensa attesa
+che l'entropia della policy, promuovendo l'esplorazione.
+
+Integrazione HER: L'agente utilizza un Replay Buffer che supporta l'Hindsight Experience
+Replay (HER), rendendolo particolarmente efficace per compiti sparse-reward e Goal-Conditioned.
+
+Funzionalità Principali:
+1.  **Inizializzazione:** Configura due Q-Network, due Target Q-Network, una Policy Network,
+    e i rispettivi ottimizzatori, inclusa la gestione dell'entropia (alpha).
+2.  **Selezione Azione:** Campiona azioni dalla Policy Network in modo stocastico.
+3.  **Aggiornamento:** Esegue l'ottimizzazione dei network Actor e Critic utilizzando i dati
+    campionati dal buffer (incluso l'HER), applicando il clipping del doppio Q-Network e
+    l'aggiornamento *soft* dei target network.
+"""
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
-import numpy as np
-from collections import deque
-import random
-
 from .q_network import QNetwork
 from .policy_network import PolicyNetwork
 from my_environment_pkg.buffers.her_replay_buffer import HERReplayBuffer

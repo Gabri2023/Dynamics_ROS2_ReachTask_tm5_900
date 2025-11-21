@@ -1,3 +1,23 @@
+"""
+Riassunto del Codice: Hindsight Experience Replay Buffer (HER)
+
+Questo modulo definisce la classe **HERReplayBuffer**, un'implementazione del Replay Buffer
+progettata specificamente per l'addestramento in ambienti Goal-Conditioned con ricompensa sparsa.
+
+La strategia **Hindsight Experience Replay (HER)** viene applicata nel metodo `store_trajectory`:
+per ogni transizione, vengono generate transizioni aggiuntive fittizie (virtuali)
+sostituendo l'obiettivo desiderato originale con un obiettivo effettivamente raggiunto
+in un momento successivo dello stesso episodio (goal relabeling).
+
+Funzionalità Principali:
+1.  **k_future:** Definisce quante volte in media viene applicato il relabeling usando
+    obiettivi futuri per ogni transizione originale.
+2.  **Goal Relabeling:** Ricalcola lo stato, lo stato successivo e la ricompensa
+    basandosi sul nuovo obiettivo raggiunto.
+3.  **Campionamento:** Restituisce batch di transizioni pronte per l'aggiornamento del
+    modello SAC, inclusa la corretta ricostruzione del vettore di stato completo.
+"""
+
 import numpy as np
 import random
 from collections import deque
