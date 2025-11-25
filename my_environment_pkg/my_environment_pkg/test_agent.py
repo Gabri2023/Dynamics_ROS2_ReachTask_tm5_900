@@ -50,16 +50,17 @@ def main():
     # Dimensione dell'azione (numero di giunti controllabili) [es. 6 elementi].
     action_dim = env.action_space.shape[0]
 
-    # Configurazione del dispositivo (CPU/GPU) per l'agente.
-   
+    # Configurazione del dispositivo (CPU) per l'agente.
     num_ep=18100 # Numero di epoch di addestramento del modello da caricare.
     device = "cpu"
 
     # Percorso del modello SAC addestrato.
+    #dir = "checkpoints/train_8/"
+    dir = "checkpoints/train_8_and_obs/"
     # Il primo è riferito alla cartella del train senza ostacoli, il secondo con ostacoli
-
-    #model_path = f"/home/gabri/tm5_900/checkpoints/train_8/sac_her_fetchreach_{num_ep}_train_delta_100steps_sparso_0_5.pth"
-    model_path = f"/home/gabri/tm5_900/checkpoints/train_8_and_obs/sac_her_fetchreach_{num_ep}_train_delta_100steps_sparso_0_5_obs.pth"
+    
+    #model_path = os.path.join(dir, f"sac_her_fetchreach_{num_ep}_train_delta_100steps_sparso_0_5.pth") #senza ostacoli
+    model_path = os.path.join(dir, f"sac_her_fetchreach_{num_ep}_train_delta_100steps_sparso_0_5_obs.pth") #con ostacoli
 
     # -------------------- 2. Caricamento Agente SAC --------------------
     # Inizializza l'agente SAC con le dimensioni corrette.
