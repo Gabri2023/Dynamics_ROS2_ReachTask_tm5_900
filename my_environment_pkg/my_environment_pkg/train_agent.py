@@ -67,7 +67,7 @@ def main():
 
 
     # Parametri del checkpoint per riprendere l'addestramento.
-    checkpoint_episode = 18100    # Episodio dal quale ripartire
+    checkpoint_episode = 19100    # Episodio dal quale ripartire
     agent_path = os.path.join(save_dir, f"sac_her_fetchreach_{checkpoint_episode}_train_delta_100steps_sparso_0_5_obs.pth")
     replay_buffer_path = os.path.join(save_dir, f"replay_buffer_{checkpoint_episode}train_delta_100steps_sparso_0_5_obs.pkl")
 

@@ -19,8 +19,9 @@ import matplotlib.pyplot as plt
 # Il parametro 'header=1' indica che l'intestazione (i nomi delle colonne)
 # si trova sulla seconda riga del file (indice 1), saltando la prima riga.
 
-#Monitor = pd.read_csv('/home/gabri/dynamics/robotic_arm_environment/checkpoints/train_8/Monitoraggio.csv', header=1)
-Monitor = pd.read_csv('/home/gabri/dynamics/robotic_arm_environment/checkpoints/train_8_and_obs/Monitoraggio.csv', header=1)
+# Nota: cambiare i seguenti path con il file di log desiderato
+#Monitor = pd.read_csv('/home/gabri/tm5_900/checkpoints/train_8/Monitoraggio.csv', header=1)
+Monitor = pd.read_csv('/home/gabri/tm5_900/checkpoints/train_8_and_obs/Monitoraggio.csv', header=0)
 
 # Stampa le prime righe del DataFrame per verifica iniziale dei dati caricati.
 print(Monitor.head())
