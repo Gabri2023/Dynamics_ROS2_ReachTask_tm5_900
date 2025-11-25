@@ -1,9 +1,7 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 	<xacro:macro name="tm_bumper_ctr_sensor">
-		<!-- I need this for contact sensor, "bumper sensor"  -->
-		<!-- I create this file in order to detect self-collisions and collisions with the ground  -->
-		<!-- This helps me to detect if the end effect touch the ground so I can reset the environment -->
+		
 
 		<gazebo reference="flange_link">
 			<!-- contact sensor -->

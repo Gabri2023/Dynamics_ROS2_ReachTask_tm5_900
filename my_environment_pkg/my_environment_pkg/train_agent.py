@@ -57,7 +57,8 @@ def main():
     print(f"state_dim: {state_dim}, action_dim: {action_dim}")
 
     # Percorso del file CSV per il monitoraggio e logging dei risultati.
-    log_file = 'checkpoints/train_8/Monitoraggio.csv'
+    #log_file = 'checkpoints/train_8/Monitoraggio.csv'
+    log_file = 'checkpoints/train_8_and_obs/Monitoraggio.csv'
 
     # -------------------- 2. Setup Agente e Checkpoint --------------------
     # Imposta il dispositivo su CPU (può essere 'cuda' se disponibile).
@@ -66,14 +67,15 @@ def main():
     # Inizializza l'agente SAC.
     sac = SAC(state_dim, action_dim, device=device)
     # Definisce la directory di salvataggio e la crea se non esiste.
-    save_dir = "checkpoints/train_8/"
+    #save_dir = "checkpoints/train_8/"
+    save_dir = "checkpoints/train_8_and_obs/"
     os.makedirs(save_dir, exist_ok=True)
 
 
     # Parametri del checkpoint per riprendere l'addestramento.
-    checkpoint_episode = 15350    # Episodio dal quale ripartire
-    agent_path = os.path.join(save_dir, f"sac_her_fetchreach_{checkpoint_episode}_train_delta_100steps_sparso_0_5.pth")
-    replay_buffer_path = os.path.join(save_dir, f"replay_buffer_{checkpoint_episode}train_delta_100steps_sparso_0_5.pkl")
+    checkpoint_episode = 18000    # Episodio dal quale ripartire
+    agent_path = os.path.join(save_dir, f"sac_her_fetchreach_{checkpoint_episode}_train_delta_100steps_sparso_0_5_obs.pth")
+    replay_buffer_path = os.path.join(save_dir, f"replay_buffer_{checkpoint_episode}train_delta_100steps_sparso_0_5_obs.pkl")
 
     # Logica per il caricamento del checkpoint.
     if os.path.exists(agent_path) and os.path.exists(replay_buffer_path):
@@ -85,11 +87,11 @@ def main():
         print("Nessun checkpoint trovato, si parte da zero.")
         start_episode = 0
 
-    episode_reward = 0  # Variabile per accumulare la ricompensa nell'intervallo di logging.
     success_count = 0   # Contatore per i successi nell'intervallo di logging.
+    episode_reward_cum = 0  # Variabile per accumulare la ricompensa nell'intervallo di logging.
 
     # -------------------- 3. Hyperparameters e Ciclo di Training --------------------
-    max_episodes = 20000              # Numero massimo di episodi di addestramento.
+    max_episodes = 35000              # Numero massimo di episodi di addestramento.
     episode_length = env._max_episode_steps # Lunghezza massima dell'episodio (100 step).
     batch_size = 256                  # Dimensione del batch per l'aggiornamento del modello.
     num_random_episodes = batch_size  # Numero minimo di step nel buffer prima di iniziare l'addestramento.
@@ -101,6 +103,8 @@ def main():
         obs, _ = env.reset()
         # Lista per memorizzare la traiettoria corrente dell'episodio (necessaria per HER).
         trajectory = []
+        episode_reward = 0  # Variabile per accumulare la ricompensa nell'intervallo di logging.
+        
 
         # Ciclo per gli step all'interno dell'episodio.
         for t in range(episode_length):
@@ -127,6 +131,7 @@ def main():
             # Aggiorna lo stato e la ricompensa cumulativa dell'episodio corrente.
             obs = next_obs
             episode_reward += reward
+            episode_reward_cum += reward  # Variabile per accumulare la ricompensa nell'intervallo di logging.
 
             if done:
                 break
@@ -150,16 +155,17 @@ def main():
             # Scrive i dati: [Episodio, Reward Medio negli ultimi 25, Successi totali, Tasso di Successo (su 25)]
             with open(log_file, mode='a', newline='') as f:
                 writer = csv.writer(f)
-                writer.writerow([episode+1, round(episode_reward / 25, 4), success_count, success_count/25])
+                writer.writerow([episode+1, round(episode_reward_cum / 25, 4), success_count, success_count/25])
             # Reset dei contatori per il prossimo intervallo di 25 episodi.
             episode_reward = 0
+            episode_reward_cum = 0
             success_count = 0
 
 
         # Salva il modello e il buffer ogni 50 episodi.
         if save and (episode + 1) % 50 == 0:
-            agent_path = os.path.join(save_dir, f"sac_her_fetchreach_{episode + 1}_train_delta_100steps_sparso_0_5.pth")
-            replay_buffer_path = os.path.join(save_dir, f"replay_buffer_{episode + 1}train_delta_100steps_sparso_0_5.pkl")
+            agent_path = os.path.join(save_dir, f"sac_her_fetchreach_{episode + 1}_train_delta_100steps_sparso_0_5_obs.pth")
+            replay_buffer_path = os.path.join(save_dir, f"replay_buffer_{episode + 1}train_delta_100steps_sparso_0_5_obs.pkl")
             save_agent(sac, agent_path)
             save_replay_buffer(sac.replay_buffer, replay_buffer_path)
             print("Model and replay buffer saved at episode:", episode + 1)

@@ -35,7 +35,9 @@ import os
 def main():
 
     # Percorso del file CSV per il logging dei risultati del test.
-    log_file = 'checkpoints/train_8/Test.csv'
+    
+    #log_file = 'checkpoints/train_8/Test.csv'
+    log_file = 'checkpoints/train_8_and_obs/Test.csv'
 
     # -------------------- 1. Setup Ambiente e Variabili --------------------
     # Inizializzazione dell'ambiente Gymnasium personalizzato (ROS/Gazebo).
@@ -54,7 +56,9 @@ def main():
     num_ep=15350 # Numero di epoch di addestramento del modello da caricare.
     device = "cpu"
     # Percorso del modello SAC addestrato.
-    model_path = f"/home/gabri/dynamics/robotic_arm_environment/checkpoints/train_8/sac_her_fetchreach_{num_ep}_train_delta_100steps_sparso_0_5.pth"
+    
+    #model_path = f"/home/gabri/dynamics/robotic_arm_environment/checkpoints/train_8/sac_her_fetchreach_{num_ep}_train_delta_100steps_sparso_0_5.pth"
+    model_path = f"/home/gabri/dynamics/robotic_arm_environment/checkpoints/train_8_and_obs/sac_her_fetchreach_{num_ep}_train_delta_100steps_sparso_0_5_obs.pth"
 
     # -------------------- 2. Caricamento Agente SAC --------------------
     # Inizializza l'agente SAC con le dimensioni corrette.

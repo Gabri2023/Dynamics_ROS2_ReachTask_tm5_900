@@ -14,6 +14,28 @@ Funzionalità Principali:
     nuova posizione casuale e riportando il robot nella posizione 'Home').
 4.  Reward: Calcola la funzione di ricompensa (reward) basata sulla distanza
     tra l'End-Effector e la sfera, includendo penalità per collisioni o uscite dai limiti di lavoro.
+
+A differenza del file "main_rl_environment.py", questo permette di inserire la posizione della sfera da teminale, 
+attraverso il comando: 
+
+    ros2 topic pub --once /target_position geometry_msgs/msg/Point "{x: ... , y: ... , z: ...}" 
+
+Inserire i valori al posto dei puntini. Rispettare i vincoli dello spazio raggiungibile:
+
+            x = [-0.5, 0.5]
+            y = [-0.65, 0.65]
+            z = [0.4, 0.75]
+
+            
+Il codice elaborerà un valore randomico della sfera finchè non si pubbilcherà un punto
+manualmente sul topic /target_position (usando il comando alla riga 21). Il punto manuale
+sarà immesso nel buffer dei punti da raggiungere e sarà spawnato al prossimo episodio.
+
+Nota:
+    nel buffer viene letto soltanto l'ultimo punto pubblicato, quindi per una sequenza di valori
+    sarà letto soltanto l'ultimo disponibile.
+
+
 """
 
 # Importa moduli standard Python.
@@ -52,6 +74,9 @@ from rclpy.duration import Duration
 # Messaggio per rilevare lo stato dei contatti (collisioni).
 from gazebo_msgs.msg import ContactsState
 
+from geometry_msgs.msg import Point
+
+
 
 # Definizione del nodo ROS 2 che funge da interfaccia tra RL e simulazione.
 class MyRLEnvironmentNode(Node):
@@ -67,6 +92,16 @@ class MyRLEnvironmentNode(Node):
 
         # Fattore di scala per l'azione ricevuta dall'agente RL (delta di posizione massima).
         self.action_step_size = 0.5 
+
+        self.manual_target = None
+        
+
+        self.target_sub = self.create_subscription(
+    Point,
+    '/target_position',
+    self.target_callback,
+    10
+)
 
         
         # Ordine: [shoulder_1, shoulder_2, elbow, wrist_1, wrist_2, wrist_3]
@@ -378,6 +413,11 @@ class MyRLEnvironmentNode(Node):
             # Se non è in nessuna regione vietata, lo accettiamo
             if not inside_forbidden:
                 return x, y, z
+            
+    def target_callback(self, msg):
+        self.manual_target = [msg.x, msg.y, msg.z]
+        
+
 
     
     # Gestisce la logica di reset dell'ambiente all'inizio di un nuovo episodio.
@@ -385,7 +425,11 @@ class MyRLEnvironmentNode(Node):
 
         # -------------------- reset sphere position------------------#
         
-        sphere_position_x, sphere_position_y, sphere_position_z = self.random_point_with_exclusions()
+        if self.manual_target is not None :
+            sphere_position_x, sphere_position_y, sphere_position_z = self.manual_target
+            self.manual_target = None
+        else:
+           sphere_position_x, sphere_position_y, sphere_position_z = self.random_point_with_exclusions()
 
         #sphere_position_x = random.uniform( -0.5, 0.5)  ##vecchia funzione che non tiene conto delle regioni proibite
         #sphere_position_y = random.uniform( 0.65, -0.65)

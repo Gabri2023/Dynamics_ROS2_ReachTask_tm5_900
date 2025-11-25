@@ -21,7 +21,9 @@ import numpy as np
 import rclpy
 
 # Importa la classe del nodo ROS 2 che gestisce l'interazione diretta con Gazebo.
-from my_environment_pkg.main_rl_environment import MyRLEnvironmentNode
+# Per usare la modalità di immissione manuale del punto, usare from my_environment_pkg.main_rl_environment_pub import MyRLEnvironmentNode
+# Per usare la modalità con soli punti randomici usare from my_environment_pkg.main_rl_environment import MyRLEnvironmentNode
+from my_environment_pkg.main_rl_environment_pub import MyRLEnvironmentNode
 
 
 class MyGymEnv(gym.Env):
@@ -41,9 +43,6 @@ class MyGymEnv(gym.Env):
         rclpy.init(args=None)
         # Crea un'istanza del nodo ROS 2 di ambiente.
         self.node = MyRLEnvironmentNode()
-
-        # Definisce il valore approssimativo di pi (utilizzato per i limiti dell'azione).
-        pi=3,14
 
         # Spazio delle Azioni (Action Space):
         # Definisce l'intervallo di valori che l'agente può scegliere per ogni giunto ad ogni step.
@@ -86,14 +85,7 @@ class MyGymEnv(gym.Env):
             print("[WARN] Oss. invalida in reset(), uso array di zeri.")
             obs = np.zeros(12, dtype=np.float32)
 
-        # Reset delle variabili di stato precedente (per il calcolo del jerk nel nodo ROS).
-        # Nota: Questi dovrebbero essere azzerati nel node.reset_environment_request,
-        # ma vengono azzerati esplicitamente qui per sicurezza.
-        self.prev_joint_1_pos = 0.0
-        # ... (azzeramento posizioni precedenti 2-6)
-        self.prev_joint_6_pos = 0.0
-
-        # Reset del flag di collisione nel nodo ROS.
+       
         self.node.collision = False
 
         # Restituisce l'osservazione iniziale e un dizionario 'info' vuoto (come richiesto da Gymnasium).
@@ -125,6 +117,11 @@ class MyGymEnv(gym.Env):
             reward += -0.4 # Penalità aggiuntiva negativa
             self.collisions +=1
             print('######----AVVENUTA COLLISIONE!!')
+            if (self.node.touch): 
+                reward += -1000
+                done = True  ## Se è avvenuta una collisione con un ostacolo si resetta la posizione
+            self.node.collision = False
+            self.node.touch = False
             # L'episodio NON viene terminato qui, ma si potrebbe forzare 'done=True'
             # se si desidera terminare immediatamente al primo contatto.
 

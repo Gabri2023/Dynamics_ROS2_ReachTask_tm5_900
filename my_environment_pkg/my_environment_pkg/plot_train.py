@@ -18,7 +18,9 @@ import matplotlib.pyplot as plt
 # Definisce il percorso del file CSV di monitoraggio.
 # Il parametro 'header=1' indica che l'intestazione (i nomi delle colonne)
 # si trova sulla seconda riga del file (indice 1), saltando la prima riga.
-Monitor = pd.read_csv('/home/gabri/dynamics/robotic_arm_environment/checkpoints/train_8/Monitoraggio.csv', header=1)
+
+#Monitor = pd.read_csv('/home/gabri/dynamics/robotic_arm_environment/checkpoints/train_8/Monitoraggio.csv', header=1)
+Monitor = pd.read_csv('/home/gabri/dynamics/robotic_arm_environment/checkpoints/train_8_and_obs/Monitoraggio.csv', header=1)
 
 # Stampa le prime righe del DataFrame per verifica iniziale dei dati caricati.
 print(Monitor.head())
