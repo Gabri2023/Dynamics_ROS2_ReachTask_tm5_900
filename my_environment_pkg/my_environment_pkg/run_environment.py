@@ -23,7 +23,8 @@ import rclpy
 # Importa la classe del nodo ROS 2 che gestisce l'interazione diretta con Gazebo.
 # Per usare la modalità di immissione manuale del punto, usare from my_environment_pkg.main_rl_environment_pub import MyRLEnvironmentNode
 # Per usare la modalità con soli punti randomici usare from my_environment_pkg.main_rl_environment import MyRLEnvironmentNode
-from my_environment_pkg.main_rl_environment_pub import MyRLEnvironmentNode
+# Consiglio: per il train_agent usare la seconda modalità, per il test_agent la seconda 
+from my_environment_pkg.main_rl_environment import MyRLEnvironmentNode
 
 
 class MyGymEnv(gym.Env):
