@@ -46,19 +46,20 @@ def main():
     obs,_ = env.reset()
     # Dimensione dello stato (spazio di osservazione) [es. 12 elementi].
     state_dim = obs.shape[0]
-    print("DEBUG obs type:", type(obs))
-    print("DEBUG obs value:", obs)
+    
     # Dimensione dell'azione (numero di giunti controllabili) [es. 6 elementi].
     action_dim = env.action_space.shape[0]
 
     # Configurazione del dispositivo (CPU/GPU) per l'agente.
-    # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    num_ep=15350 # Numero di epoch di addestramento del modello da caricare.
+   
+    num_ep=18100 # Numero di epoch di addestramento del modello da caricare.
     device = "cpu"
+
     # Percorso del modello SAC addestrato.
-    
-    #model_path = f"/home/gabri/dynamics/robotic_arm_environment/checkpoints/train_8/sac_her_fetchreach_{num_ep}_train_delta_100steps_sparso_0_5.pth"
-    model_path = f"/home/gabri/dynamics/robotic_arm_environment/checkpoints/train_8_and_obs/sac_her_fetchreach_{num_ep}_train_delta_100steps_sparso_0_5_obs.pth"
+    # Il primo è riferito alla cartella del train senza ostacoli, il secondo con ostacoli
+
+    #model_path = f"/home/gabri/tm5_900/checkpoints/train_8/sac_her_fetchreach_{num_ep}_train_delta_100steps_sparso_0_5.pth"
+    model_path = f"/home/gabri/tm5_900/checkpoints/train_8_and_obs/sac_her_fetchreach_{num_ep}_train_delta_100steps_sparso_0_5_obs.pth"
 
     # -------------------- 2. Caricamento Agente SAC --------------------
     # Inizializza l'agente SAC con le dimensioni corrette.
@@ -85,7 +86,7 @@ def main():
         episode_reward = 0
 
         for t in range(episode_length):
-            print('è il numero di step', t+1)
+            print('Numero di step:', t+1)
             # Prepara lo stato (l'osservazione) per l'agente.
             state = obs
 

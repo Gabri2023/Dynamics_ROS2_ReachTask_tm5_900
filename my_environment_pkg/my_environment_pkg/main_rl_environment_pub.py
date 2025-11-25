@@ -16,7 +16,7 @@ Funzionalità Principali:
     tra l'End-Effector e la sfera, includendo penalità per collisioni o uscite dai limiti di lavoro.
 
 A differenza del file "main_rl_environment.py", questo permette di inserire la posizione della sfera da teminale, 
-attraverso il comando: 
+attraverso il comando (in un altro terminale): 
 
     ros2 topic pub --once /target_position geometry_msgs/msg/Point "{x: ... , y: ... , z: ...}" 
 

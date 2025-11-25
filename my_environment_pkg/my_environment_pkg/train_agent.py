@@ -45,16 +45,10 @@ def main():
     # Resetta l'ambiente e ottiene l'osservazione iniziale.
     obs = env.reset()[0]
 
-    # Stampa la struttura di 'obs' per debug e verifica delle dimensioni.
-    print("Struttura di 'obs':", obs)
-    print("Dimensione di 'obs':", obs.shape)
-
     # Dimensione dello stato (osservazione, es. 12 elementi).
     state_dim = obs.shape[0]
     # Dimensione dell'azione (es. 6 giunti).
     action_dim = env.action_space.shape[0]
-
-    print(f"state_dim: {state_dim}, action_dim: {action_dim}")
 
     # Percorso del file CSV per il monitoraggio e logging dei risultati.
     #log_file = 'checkpoints/train_8/Monitoraggio.csv'
@@ -73,7 +67,7 @@ def main():
 
 
     # Parametri del checkpoint per riprendere l'addestramento.
-    checkpoint_episode = 18000    # Episodio dal quale ripartire
+    checkpoint_episode = 18100    # Episodio dal quale ripartire
     agent_path = os.path.join(save_dir, f"sac_her_fetchreach_{checkpoint_episode}_train_delta_100steps_sparso_0_5_obs.pth")
     replay_buffer_path = os.path.join(save_dir, f"replay_buffer_{checkpoint_episode}train_delta_100steps_sparso_0_5_obs.pkl")
 
