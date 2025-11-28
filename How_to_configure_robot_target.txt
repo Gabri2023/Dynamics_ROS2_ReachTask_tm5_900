@@ -1,0 +1,59 @@
+Aggiornamento dinamico del target point
+=======================================
+
+Per abilitare l'aggiornamento dinamico del target point è necessario creare uno script
+nel path "~/.target_position".
+
+1) Creazione dello script set_target
+
+Aprire un nuovo terminale ed eseguire:
+
+    nano ~/set_target
+
+Incollare il seguente contenuto:
+
+    #!/bin/bash
+
+    FILE="$HOME/.target_position"
+
+    # Devono essere 3 valori: X Y Z
+    if [ "$#" -ne 3 ]; then
+        echo "Uso: set_target X Y Z"
+        exit 1
+    fi
+
+    echo "$1 $2 $3" > "$FILE"
+    echo "✔ Target aggiornato in $FILE"
+    echo "  → X=$1  Y=$2  Z=$3"
+
+Salvare il file, quindi renderlo eseguibile:
+
+    chmod +x ~/set_target
+
+2) Aggiungere il comando al PATH
+
+Per rendere lo script disponibile globalmente:
+
+    echo 'export PATH="$HOME:$PATH"' >> ~/.bashrc
+    source ~/.bashrc
+
+3) Utilizzo
+
+Avviare normalmente la simulazione e il train/test secondo le istruzioni del ReadMe.  
+Per aggiornare la posizione del target a partire dal prossimo episodio, eseguire:
+
+    set_target 0.5 -0.3 0.6  ## I valori sono da modificare a piacimento, definiti in metri
+
+4) Vincoli dello spazio raggiungibile
+
+Assicurarsi che i valori siano compresi nello spazio in cui il robot è stato allenato:
+
+        x = [-0.5, 0.5]
+        y = [-0.65, 0.65]
+        z = [0.4, 0.75]
+
+5) Comportamento del codice
+
+- Finché non si pubblica un punto manualmente, il codice genera un punto randomico della sfera.  
+- Il punto manuale sarà immesso nel buffer dei punti da raggiungere e sarà spawnato al prossimo episodio.  
+- Nel buffer viene letto soltanto l'ultimo punto pubblicato; quindi, per una sequenza di valori, sarà letto solo l'ultimo disponibile.

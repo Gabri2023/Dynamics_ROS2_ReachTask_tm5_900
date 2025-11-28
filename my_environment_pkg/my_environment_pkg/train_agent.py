@@ -51,8 +51,8 @@ def main():
     action_dim = env.action_space.shape[0]
 
     # Percorso del file CSV per il monitoraggio e logging dei risultati.
-    #log_file = 'checkpoints/train_8/Monitoraggio.csv'
-    log_file = 'checkpoints/train_8_and_obs/Monitoraggio.csv'
+    log_file = 'checkpoints/train_8/Monitoraggio.csv'
+    #log_file = 'checkpoints/train_8_and_obs_2/Monitoraggio.csv'
 
     # -------------------- 2. Setup Agente e Checkpoint --------------------
     # Imposta il dispositivo su CPU (può essere 'cuda' se disponibile).
@@ -61,15 +61,15 @@ def main():
     # Inizializza l'agente SAC.
     sac = SAC(state_dim, action_dim, device=device)
     # Definisce la directory di salvataggio e la crea se non esiste.
-    #save_dir = "checkpoints/train_8/"
-    save_dir = "checkpoints/train_8_and_obs/"
+    save_dir = "checkpoints/train_8/"
+    #save_dir = "checkpoints/train_8_and_obs_2/"
     os.makedirs(save_dir, exist_ok=True)
 
 
     # Parametri del checkpoint per riprendere l'addestramento.
-    checkpoint_episode = 19100    # Episodio dal quale ripartire
-    agent_path = os.path.join(save_dir, f"sac_her_fetchreach_{checkpoint_episode}_train_delta_100steps_sparso_0_5_obs.pth")
-    replay_buffer_path = os.path.join(save_dir, f"replay_buffer_{checkpoint_episode}train_delta_100steps_sparso_0_5_obs.pkl")
+    checkpoint_episode = 3150    # Episodio dal quale ripartire
+    agent_path = os.path.join(save_dir, f"sac_her_fetchreach_{checkpoint_episode}_train_delta_100steps_sparso_0_5.pth")
+    replay_buffer_path = os.path.join(save_dir, f"replay_buffer_{checkpoint_episode}train_delta_100steps_sparso_0_5.pkl")
 
     # Logica per il caricamento del checkpoint.
     if os.path.exists(agent_path) and os.path.exists(replay_buffer_path):
@@ -158,8 +158,8 @@ def main():
 
         # Salva il modello e il buffer ogni 50 episodi.
         if save and (episode + 1) % 50 == 0:
-            agent_path = os.path.join(save_dir, f"sac_her_fetchreach_{episode + 1}_train_delta_100steps_sparso_0_5_obs.pth")
-            replay_buffer_path = os.path.join(save_dir, f"replay_buffer_{episode + 1}train_delta_100steps_sparso_0_5_obs.pkl")
+            agent_path = os.path.join(save_dir, f"sac_her_fetchreach_{episode + 1}_train_delta_100steps_sparso_0_5.pth")
+            replay_buffer_path = os.path.join(save_dir, f"replay_buffer_{episode + 1}train_delta_100steps_sparso_0_5.pkl")
             save_agent(sac, agent_path)
             save_replay_buffer(sac.replay_buffer, replay_buffer_path)
             print("Model and replay buffer saved at episode:", episode + 1)

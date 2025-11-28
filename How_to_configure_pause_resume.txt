@@ -1,0 +1,73 @@
+Abilitazione dei comandi di pausa e ripresa del train/test
+==========================================================
+
+Per poter mettere in pausa e riprendere l’esecuzione del train/test dalla linea di comando,
+è necessario creare due script: "pause_rl" e "resume_rl".
+
+----------------------------------------------------------
+1) Installazione del comando di pausa (pause_rl)
+----------------------------------------------------------
+
+Aprire un nuovo terminale ed eseguire:
+
+    nano ~/pause_rl
+
+Incollare il seguente contenuto:
+
+    #!/bin/bash
+    echo "PAUSE" > ~/.rl_pause
+    echo "✔ Training messo in PAUSA"
+
+Salvare il file, quindi renderlo eseguibile:
+
+    chmod +x ~/pause_rl
+
+
+----------------------------------------------------------
+2) Installazione del comando di ripresa (resume_rl)
+----------------------------------------------------------
+
+Aprire un nuovo terminale ed eseguire:
+
+    nano ~/resume_rl
+
+Incollare il seguente contenuto:
+
+    #!/bin/bash
+    rm -f ~/.rl_pause
+    echo "✔ Training RIPRESO"
+
+Salvare il file, quindi renderlo eseguibile:
+
+    chmod +x ~/resume_rl
+
+
+----------------------------------------------------------
+3) Aggiungere i comandi al PATH
+----------------------------------------------------------
+
+Per rendere i comandi disponibili ovunque nel terminale, eseguire:
+
+    echo 'export PATH="$HOME:$PATH"' >> ~/.bashrc
+    source ~/.bashrc
+
+
+----------------------------------------------------------
+4) Utilizzo dei comandi
+----------------------------------------------------------
+
+Avviare normalmente la simulazione e il train/test secondo le istruzioni del ReadMe.
+Poi, da un nuovo terminale, usare:
+
+Per mettere in pausa la simulazione:
+
+    pause_rl
+
+Per riprendere la simulazione:
+
+    resume_rl
+
+
+----------------------------------------------------------
+Fine del file
+----------------------------------------------------------

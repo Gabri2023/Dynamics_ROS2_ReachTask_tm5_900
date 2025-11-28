@@ -15,29 +15,54 @@ Funzionalità Principali:
 4.  Reward: Calcola la funzione di ricompensa (reward) basata sulla distanza
     tra l'End-Effector e la sfera, includendo penalità per collisioni o uscite dai limiti di lavoro.
 
-A differenza del file "main_rl_environment.py", questo permette di inserire la posizione della sfera da teminale, 
-attraverso il comando (in un altro terminale): 
+A differenza del file "main_rl_environment.py", questo permette di:
 
-    ros2 topic pub --once /target_position geometry_msgs/msg/Point "{x: ... , y: ... , z: ...}" 
+1)  Inserire la posizione della sfera da teminale, attraverso il comando (in un altro terminale): 
 
-Inserire i valori al posto dei puntini. Rispettare i vincoli dello spazio raggiungibile:
+    set_target -0.3 0.6 0.55   ## I tre valori sono da sostiruire con quelli desiderati.
+
+Rispettare i vincoli dello spazio raggiungibile (lo spazione nel quale il robot è stato allenato):
 
             x = [-0.5, 0.5]
             y = [-0.65, 0.65]
             z = [0.4, 0.75]
 
             
-Il codice elaborerà un valore randomico della sfera finchè non si pubbilcherà un punto
-manualmente sul topic /target_position (usando il comando alla riga 21). Il punto manuale
+Il codice, quindi, elaborerà un valore randomico della sfera finchè non si pubbilcherà un punto
+manualmente (usando il comando alla riga 21). Il punto manuale
 sarà immesso nel buffer dei punti da raggiungere e sarà spawnato al prossimo episodio.
 
 Nota:
     nel buffer viene letto soltanto l'ultimo punto pubblicato, quindi per una sequenza di valori
     sarà letto soltanto l'ultimo disponibile.
 
+2) Cambiare la posizione iniziale (gli angoli dei giunti con cui il robot inizia l'episodio), attraverso il 
+seguente comando (in un altro terminale):
+ 
+    set_home 2.0 -0.3 0.4 0.0 1.2 -0.5  ## Cambiare i sei valori dell'array a piacimento. 
+
+Questo comando richiama un file al path "~/.robot_home" che aggiorna la posizione di home del robot, a partire
+dall'episodio successivo. In caso di posizione non valida viene inserita la posizione [0 0 0 0 0 0] di default.
+
+3) Mettere in pausa e riprendere il train/test per avere tempo di aggiornare da terminale la home positione e 
+la target position (al punto 1 e 2). 
+
+Il comando da eseguire (in un nuovo terminale) per mettere in pausa la simulazione è:
+
+    pause_rl
+
+invece per riprenderlo è:
+    resume_rl
+
+    
+NOTA IMPORTANTE: per abilitare le funzionalità ai punti 1, 2 e 3 devono essere configurati dei file nel path del sistema.
+La guida si trova nei file:
+    How_to_configure_robot_home.txt
+    How_to_configure_robot_target.txt
+    How_to_configure_pause_resume.txt
 
 """
-
+import os
 # Importa moduli standard Python.
 import time
 # Importa la libreria client ROS 2 Python.
@@ -76,6 +101,8 @@ from gazebo_msgs.msg import ContactsState
 
 from geometry_msgs.msg import Point
 
+import time
+
 
 
 # Definizione del nodo ROS 2 che funge da interfaccia tra RL e simulazione.
@@ -93,17 +120,8 @@ class MyRLEnvironmentNode(Node):
         # Fattore di scala per l'azione ricevuta dall'agente RL (delta di posizione massima).
         self.action_step_size = 0.5 
 
-        self.manual_target = None
-        
+        self.manual_target = False
 
-        self.target_sub = self.create_subscription(
-    Point,
-    '/target_position',
-    self.target_callback,
-    10
-)
-
-        
         # Ordine: [shoulder_1, shoulder_2, elbow, wrist_1, wrist_2, wrist_3]
         pi = 3.14159
         # Definizione dei limiti minimi di movimento per ciascuno dei 6 giunti in radianti.
@@ -249,6 +267,13 @@ class MyRLEnvironmentNode(Node):
         self.ts = message_filters.ApproximateTimeSynchronizer([self.joint_state_subscription, self.target_point_subscription], queue_size=10, slop=0.1, allow_headerless=True)
         # Registra la callback che viene chiamata quando i messaggi sincronizzati arrivano.
         self.ts.registerCallback(self.initial_callback)
+
+    # Funzione che permette di mettere in paura e riprendere il train/test attraverso i comandi da terminale "pause_rl" e "resume_rl"
+    def check_pause(self):
+    # Se il file ~/.rl_pause esiste, metti in pausa
+        while os.path.exists(os.path.expanduser("~/.rl_pause")):
+            print("⏸️ Training in pausa... usa 'resume_rl' per continuare.")
+            time.sleep(0.5)
 
 
     # Callback che elabora i messaggi ContactsState per rilevare collisioni.
@@ -414,22 +439,53 @@ class MyRLEnvironmentNode(Node):
             if not inside_forbidden:
                 return x, y, z
             
-    def target_callback(self, msg):
-        self.manual_target = [msg.x, msg.y, msg.z]
+    TARGET_FILE = os.path.expanduser("~/.target_position")
+            
+    def load_target_position_once(self):
+        """
+        Legge il target manuale SOLO UNA VOLTA.
+        Dopo averlo letto, cancella il file in modo che non venga riutilizzato.
+        """
+        if os.path.exists(self.TARGET_FILE):
+            with open(self.TARGET_FILE) as f:
+                vals = list(map(float, f.read().split()))
+            
+            # cancello il file per evitare riuso negli episodi successivi
+            os.remove(self.TARGET_FILE)
+
+            return vals  # [x, y, z]
+        else:
+            return None  # Nessun target manuale
+
         
 
+    # Questa funzione permette l'aggiornamento dinamico della home position.
+    def load_home_position(self):
+        file = os.path.expanduser("~/.robot_home")
+        if not os.path.exists(file):
+            return [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]  # default
+        with open(file) as f:
+            vals = list(map(float, f.read().split()))
+        return vals
 
     
     # Gestisce la logica di reset dell'ambiente all'inizio di un nuovo episodio.
     def reset_environment_request(self, timeout=5.0):
 
+        self.check_pause()
+
         # -------------------- reset sphere position------------------#
+
+        manual = self.load_target_position_once()
         
-        if self.manual_target is not None :
-            sphere_position_x, sphere_position_y, sphere_position_z = self.manual_target
-            self.manual_target = None
+        if manual is not None:
+            # Usa target manuale una volta
+            sphere_position_x, sphere_position_y, sphere_position_z = manual
+            print(f"Using MANUAL target: {manual}")
         else:
-           sphere_position_x, sphere_position_y, sphere_position_z = self.random_point_with_exclusions()
+            # Genera target randomico
+            sphere_position_x, sphere_position_y, sphere_position_z = self.random_point_with_exclusions()
+            print("Using RANDOM target")
 
         #sphere_position_x = random.uniform( -0.5, 0.5)  ##vecchia funzione che non tiene conto delle regioni proibite
         #sphere_position_y = random.uniform( 0.65, -0.65)
@@ -459,7 +515,7 @@ class MyRLEnvironmentNode(Node):
         #---------------------reset robot position-------------------#
         # Definisce il punto 'Home' (posizioni a zero) per il reset del robot.
         home_point_msg = JointTrajectoryPoint()
-        home_point_msg.positions     = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+        home_point_msg.positions = self.load_home_position()
         home_point_msg.velocities    = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         home_point_msg.accelerations = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
         # Tempo più lungo per un reset sicuro
@@ -520,6 +576,8 @@ class MyRLEnvironmentNode(Node):
 
     # Gestisce l'esecuzione di un'azione (delta di posizione) ricevuta dall'agente RL.
     def action_step_service(self, action_values):
+
+        self.check_pause()
         
         # 'action_values' è un array numpy da 6 elementi (es. da -1 a 1)
         # La funzione non restituisce nulla, ma invia un goal di traiettoria al controller.

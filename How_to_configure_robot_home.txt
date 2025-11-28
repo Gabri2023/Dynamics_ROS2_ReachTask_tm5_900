@@ -1,0 +1,43 @@
+Aggiornamento dinamico della home position
+==========================================
+
+Per abilitare l'aggiornamento dinamico della home position è necessario creare uno script
+nel path "~/.robot_home".
+
+1) Creazione dello script set_home
+
+Aprire un nuovo terminale ed eseguire:
+
+    nano ~/set_home
+
+Incollare il seguente contenuto:
+
+    #!/bin/bash
+
+    FILE="$HOME/.robot_home"
+
+    if [ "$#" -ne 6 ]; then
+        echo "Uso: set_home j1 j2 j3 j4 j5 j6"
+        exit 1
+    fi
+
+    echo "$1 $2 $3 $4 $5 $6" > "$FILE"
+    echo "✔ Home position aggiornata in $FILE"
+
+Salvare il file, quindi renderlo eseguibile:
+
+    chmod +x ~/set_home
+
+2) Aggiungere il comando al PATH
+
+Per rendere lo script disponibile globalmente:
+
+    echo 'export PATH="$HOME:$PATH"' >> ~/.bashrc
+    source ~/.bashrc
+
+3) Utilizzo
+
+Avviare normalmente la simulazione e il train/test secondo le istruzioni del ReadMe.  
+Per aggiornare la posizione iniziale dei giunti a partire dal prossimo episodio, eseguire:
+
+    set_home 0.5 -0.3 0.2 0.0 1.0 -0.7  ## I valori sono da modificare a piacimento

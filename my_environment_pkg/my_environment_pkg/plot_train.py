@@ -20,8 +20,8 @@ import matplotlib.pyplot as plt
 # si trova sulla seconda riga del file (indice 1), saltando la prima riga.
 
 # Nota: cambiare i seguenti path con il file di log desiderato
-#Monitor = pd.read_csv('/home/gabri/tm5_900/checkpoints/train_8/Monitoraggio.csv', header=1)
-Monitor = pd.read_csv('/home/gabri/tm5_900/checkpoints/train_8_and_obs/Monitoraggio.csv', header=0)
+Monitor = pd.read_csv('/home/gabri/tm5_900/checkpoints/train_8/Monitoraggio.csv', header=1)
+#Monitor = pd.read_csv('/home/gabri/tm5_900/checkpoints/train_8_and_obs_2/Monitoraggio.csv', header=0)
 
 # Stampa le prime righe del DataFrame per verifica iniziale dei dati caricati.
 print(Monitor.head())

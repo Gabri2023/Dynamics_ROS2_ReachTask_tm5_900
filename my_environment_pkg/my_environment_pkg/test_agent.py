@@ -36,8 +36,8 @@ def main():
 
     # Percorso del file CSV per il logging dei risultati del test.
     
-    #log_file = 'checkpoints/train_8/Test.csv'
-    log_file = 'checkpoints/train_8_and_obs/Test.csv'
+    log_file = 'checkpoints/train_8/Test.csv'
+    #log_file = 'checkpoints/train_8_and_obs/Test.csv'
 
     # -------------------- 1. Setup Ambiente e Variabili --------------------
     # Inizializzazione dell'ambiente Gymnasium personalizzato (ROS/Gazebo).
@@ -51,16 +51,17 @@ def main():
     action_dim = env.action_space.shape[0]
 
     # Configurazione del dispositivo (CPU) per l'agente.
-    num_ep=18100 # Numero di epoch di addestramento del modello da caricare.
+    num_ep=15400 # Numero di epoch di addestramento del modello da caricare.
     device = "cpu"
 
     # Percorso del modello SAC addestrato.
-    #dir = "checkpoints/train_8/"
-    dir = "checkpoints/train_8_and_obs/"
+    dir = "checkpoints/train_8/"
+    #dir = "checkpoints/train_8_and_obs/"
+    #dir = "checkpoints/train_8_and_obs_2/"
     # Il primo è riferito alla cartella del train senza ostacoli, il secondo con ostacoli
     
-    #model_path = os.path.join(dir, f"sac_her_fetchreach_{num_ep}_train_delta_100steps_sparso_0_5.pth") #senza ostacoli
-    model_path = os.path.join(dir, f"sac_her_fetchreach_{num_ep}_train_delta_100steps_sparso_0_5_obs.pth") #con ostacoli
+    #model_path = os.path.join(dir, f"sac_her_fetchreach_{num_ep}_train_delta_100steps_sparso_20_obs_2.pth") #con ostacoli
+    model_path = os.path.join(dir, f"sac_her_fetchreach_{num_ep}_train_delta_100steps_sparso_0_5.pth") #senza ostacoli
 
     # -------------------- 2. Caricamento Agente SAC --------------------
     # Inizializza l'agente SAC con le dimensioni corrette.
@@ -120,8 +121,7 @@ def main():
     with open(log_file, mode='a', newline='') as f:
             writer = csv.writer(f)
             # Scrive: [Epoch del modello, Ricompensa Media, Conteggio Successi, Tasso di Successo]
-            # Nota: la terza e quarta colonna sono identiche qui (success_count / num_episodes * 100) sarebbe più tipico per il tasso.
-            writer.writerow([num_ep, Reward_global/num_episodes, success_count, success_count ])
+            writer.writerow([num_ep, Reward_global/num_episodes, success_count, success_count/num_episodes ])
 
 if __name__ == "__main__":
     main()
