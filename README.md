@@ -1,5 +1,3 @@
-![Demo del Robot](video_pictures/senza_ostacoli_15400episodi.gif)
-
 ## Codici per Avvio Train e Test
 
 Questo repository contiene gli script per l'addestramento (*train*) e il test (*test*) di un agente SAC per il controllo di un braccio robotico simulato con ROS 2 e Gazebo.
@@ -46,11 +44,17 @@ Nel **primo terminale**, avviare la simulazione Gazebo:
 ros2 launch my_environment_pkg my_environment.launch.py
 ```
 
+## Demo reach task tm5_900 (15k episodi di train RL)
+![Demo del Robot](video_pictures/senza_ostacoli_15400episodi.gif)
+
 * Con ostacoli:
 
 ```bash
 ros2 launch my_environment_pkg my_environment_obs.launch.py
 ```
+
+## Environment con ostacoli (versione beta)
+![Demo del Robot](video_pictures/con_ostacoli.png)
 
 ---
 
