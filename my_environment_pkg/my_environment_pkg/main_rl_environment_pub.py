@@ -462,13 +462,77 @@ class MyRLEnvironmentNode(Node):
     # Questa funzione permette l'aggiornamento dinamico della home position.
     def load_home_position(self):
         file = os.path.expanduser("~/.robot_home")
-        if not os.path.exists(file):
-            return [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]  # default
-        with open(file) as f:
-            vals = list(map(float, f.read().split()))
-        # Controllo che il contenuto dei singoli valori rispetti i limiti dei giunti
-        vals = np.clip(vals, -1.0, 1.0).tolist()
-        return vals
+        default_home = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+
+        try:
+            if not os.path.exists(file):
+                return default_home
+
+            with open(file) as f:
+                vals = list(map(float, f.read().split()))
+
+            if len(vals) != 6:
+                self.get_logger().warn("~/.robot_home deve contenere esattamente 6 valori. Uso la home di default.")
+                return default_home
+
+            # 1) Clamp ai limiti REALI dei giunti
+            q = np.array(vals, dtype=np.float32)
+            q = np.clip(q, self.joint_limits_min, self.joint_limits_max)
+
+            # 2) Guard-rails congiunti su J2-J3 per evitare posture estreme
+            #    (scelte conservative per prevenire 'partenze sotto terra' o auto-contatti).
+            LIM_23_SOFT = np.deg2rad(70.0)   # ~1.2217 rad
+            LIM_23_HARD = np.deg2rad(60.0)   # ~1.0472 rad (cap quando entrambi superano la soft)
+            SUM_MAX     = np.deg2rad(110.0)  # ~1.9199 rad (cap sulla somma |J2|+|J3|)
+
+            changed = False
+
+            # Se J2 e J3 sono entrambi molto alti (es. ~90°), riducili a un valore più sicuro
+            if abs(q[1]) > LIM_23_SOFT and abs(q[2]) > LIM_23_SOFT:
+                q[1] = np.sign(q[1]) * LIM_23_HARD
+                q[2] = np.sign(q[2]) * LIM_23_HARD
+                changed = True
+
+            # Limite sulla somma delle ampiezze di J2 e J3
+            s = abs(q[1]) + abs(q[2])
+            if s > SUM_MAX:
+                scale = float(SUM_MAX / s)
+                q[1] *= scale
+                q[2] *= scale
+                changed = True
+                
+            # 3) Cap dinamico su J4 (wrist_1_joint) + cap dei polsi J5-J6 quando J2/J3 sono alti
+            #    - Base: J4 <= 70°
+            #    - Se |J2|+|J3| > 90° -> J4 <= 55°
+            #    - Se |J2|+|J3| > 110° -> J4 <= 40°
+            J4_BASE_CAP = np.deg2rad(60.0)
+            if s >= np.deg2rad(100.0):
+                j4_cap = np.deg2rad(40.0)
+            elif s >= np.deg2rad(80.0):
+                j4_cap = np.deg2rad(50.0)
+            else:
+                j4_cap = J4_BASE_CAP
+
+            if abs(q[3]) > j4_cap:
+                q[3] = np.sign(q[3]) * j4_cap
+                changed = True
+
+            # Se J2 o J3 sono comunque “alti”, limita anche i polsi per evitare configurazioni tese
+            if abs(q[1]) > LIM_23_SOFT or abs(q[2]) > LIM_23_SOFT:
+                WRIST_CAP = np.deg2rad(60.0)  # ~1.047 rad
+                for i in (4, 5):
+                    if abs(q[i]) > WRIST_CAP:
+                        q[i] = np.sign(q[i]) * WRIST_CAP
+                        changed = True
+
+            if changed:
+                self.get_logger().warn("Home regolata per evitare pose instabili (cap su J2/J3 e polsi).")
+
+            return q.tolist()
+
+        except Exception as e:
+            self.get_logger().error(f"Errore nella lettura/validazione di ~/.robot_home: {e}")
+            return default_home
 
     
     # Gestisce la logica di reset dell'ambiente all'inizio di un nuovo episodio.
