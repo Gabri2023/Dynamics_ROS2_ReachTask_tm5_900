@@ -466,6 +466,8 @@ class MyRLEnvironmentNode(Node):
             return [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]  # default
         with open(file) as f:
             vals = list(map(float, f.read().split()))
+        # Controllo che il contenuto dei singoli valori rispetti i limiti dei giunti
+        vals = np.clip(vals, -1.0, 1.0).tolist()
         return vals
 
     
