@@ -1,4 +1,4 @@
-![Demo del Robot](senza_ostacoli_15400episodi.gif)
+![Demo del Robot](video_pictures/senza_ostacoli_15400episodi.gif)
 
 ## Codici per Avvio Train e Test
 
