@@ -502,9 +502,9 @@ class MyRLEnvironmentNode(Node):
                 changed = True
                 
             # 3) Cap dinamico su J4 (wrist_1_joint) + cap dei polsi J5-J6 quando J2/J3 sono alti
-            #    - Base: J4 <= 70°
-            #    - Se |J2|+|J3| > 90° -> J4 <= 55°
-            #    - Se |J2|+|J3| > 110° -> J4 <= 40°
+            #    - Base: J4 <= 60°
+            #    - Se |J2|+|J3| > 80° -> J4 <= 50°
+            #    - Se |J2|+|J3| > 100° -> J4 <= 40°
             J4_BASE_CAP = np.deg2rad(60.0)
             if s >= np.deg2rad(100.0):
                 j4_cap = np.deg2rad(40.0)
