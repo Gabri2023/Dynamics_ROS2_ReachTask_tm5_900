@@ -15,7 +15,7 @@ Funzionalità Principali:
 4.  Reward: Calcola la funzione di ricompensa (reward) basata sulla distanza
     tra l'End-Effector e la sfera, includendo penalità per collisioni o uscite dai limiti di lavoro.
 
-A differenza del file "main_rl_environment.py", questo permette di:
+A differenza del file "main_rl_environment.py" (prima versione), questo permette di:
 
 1)  Inserire la posizione della sfera da teminale, attraverso il comando (in un altro terminale): 
 
@@ -272,7 +272,7 @@ class MyRLEnvironmentNode(Node):
     def check_pause(self):
     # Se il file ~/.rl_pause esiste, metti in pausa
         while os.path.exists(os.path.expanduser("~/.rl_pause")):
-            print("⏸️ Training in pausa... usa 'resume_rl' per continuare.")
+            print("⏸️ Simulazione in pausa... usa 'resume_rl' per continuare.")
             time.sleep(0.5)
 
 
