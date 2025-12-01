@@ -526,7 +526,7 @@ class MyRLEnvironmentNode(Node):
                         changed = True
 
             if changed:
-                self.get_logger().warn("Home regolata per evitare pose instabili (cap su J2/J3 e polsi).")
+                self.get_logger().warn("Home regolata per evitare pose instabili.")
 
             return q.tolist()
 
