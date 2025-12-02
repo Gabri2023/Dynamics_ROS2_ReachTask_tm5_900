@@ -524,9 +524,12 @@ class MyRLEnvironmentNode(Node):
                     if abs(q[i]) > WRIST_CAP:
                         q[i] = np.sign(q[i]) * WRIST_CAP
                         changed = True
+                        
+            positions = q.tolist()
 
             if changed:
                 self.get_logger().warn("CONFIGURAZIONE HOME NON VALIDA! Home regolata per evitare pose instabili.")
+                self.get_logger().warn(f"NUOVA HOME: {[f'{p:.3f}' for p in positions]}")
 
             return q.tolist()
 
