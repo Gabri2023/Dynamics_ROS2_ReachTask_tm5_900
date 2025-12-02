@@ -526,7 +526,7 @@ class MyRLEnvironmentNode(Node):
                         changed = True
 
             if changed:
-                self.get_logger().warn("Home regolata per evitare pose instabili.")
+                self.get_logger().warn("CONFIGURAZIONE HOME NON VALIDA! Home regolata per evitare pose instabili.")
 
             return q.tolist()
 

@@ -42,7 +42,7 @@ Per rendere lo script disponibile globalmente:
 Avviare normalmente la simulazione e il train/test secondo le istruzioni del ReadMe.  
 Per aggiornare la posizione del target a partire dal prossimo episodio, eseguire:
 
-    set_target 0.5 -0.3 0.6  ## I valori sono da modificare a piacimento, definiti in metri
+    set_target 0.4 -0.3 0.6  ## I valori sono da modificare a piacimento, definiti in metri
 
 4) Vincoli dello spazio raggiungibile
 
