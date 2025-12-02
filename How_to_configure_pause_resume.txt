@@ -16,7 +16,7 @@ Incollare il seguente contenuto:
 
     #!/bin/bash
     echo "PAUSE" > ~/.rl_pause
-    echo "✔ Training messo in PAUSA"
+    echo "✔ Simulazione messa in PAUSA"
 
 Salvare il file, quindi renderlo eseguibile:
 
@@ -35,7 +35,7 @@ Incollare il seguente contenuto:
 
     #!/bin/bash
     rm -f ~/.rl_pause
-    echo "✔ Training RIPRESO"
+    echo "✔ Simulazione RIPRESA"
 
 Salvare il file, quindi renderlo eseguibile:
 
