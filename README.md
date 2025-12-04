@@ -1,6 +1,6 @@
 ## Codici per Avvio Train e Test
 
-Questo repository contiene gli script per l'addestramento (*train*) e il test (*test*) di un agente SAC per il controllo di un braccio robotico simulato con ROS 2 e Gazebo.
+Questo repository contiene gli script per l'addestramento (*train_agent*) e il test (*test_agent*) di un agente SAC per il controllo di un braccio robotico simulato con ROS 2 e Gazebo.
 
 ---
 
