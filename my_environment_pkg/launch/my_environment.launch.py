@@ -5,8 +5,7 @@
   Cosa fa:
   1. Avvia Gazebo caricando un mondo specifico ("my_world.world").
   2. Lancia il file di lancio del robot TM5 900(che avvia il robot e i suoi controller).
-  3. Lancia il file di lancio della "sfera" (che spawna la sfera 
-     in Gazebo e avvia il nodo 'marker').
+  3. Lancia il file di lancio della "sfera" (che spawna la sfera in Gazebo).
   
   In sintesi, orchestra l'avvio di Gazebo, del robot e di un oggetto
   (sfera) nell'ambiente.
@@ -38,7 +37,7 @@ def generate_launch_description():
     
     # 3. Prepara il lancio della Sfera
     # Allo stesso modo, includiamo il file 'my_sphere.launch.py' dal pacchetto 'my_sphere_pkg'.
-    # Questo avvia sia lo spawn della sfera in Gazebo sia il nodo del marker.
+    # Questo avvia lo spawn della sfera in Gazebo.
     sphere_mark  = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(my_sphere_files + '/launch/my_sphere.launch.py')
     ) 
@@ -76,7 +75,7 @@ def generate_launch_description():
     # Aggiunge le tre azioni (processi) che abbiamo definito alla lista di avvio.
     # ROS 2 le avvierà in parallelo.
     ld.add_action (tm5_900_robot) # Avvia il robot e i controller
-    ld.add_action (sphere_mark)  # Avvia lo spawn della sfera e il marker
+    ld.add_action (sphere_mark)  # Avvia lo spawn della sfera
     ld.add_action (gazebo_node)  # Avvia la simulazione Gazebo
 
     # Restituisce l'oggetto LaunchDescription completo a 'ros2 launch' per l'esecuzione.
