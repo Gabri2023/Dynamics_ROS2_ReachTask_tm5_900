@@ -1,6 +1,6 @@
 '''
   Questo file di lancio ROS 2 (Python) è responsabile dell'avvio 
-  del robot Doosan (tm5_900) e dei suoi controller.
+  del robot (tm5_900) e dei suoi controller.
   
   Cosa fa:
   1. Trova il file di descrizione del robot (.urdf.xacro).
