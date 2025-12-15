@@ -78,7 +78,7 @@ Il file `test_agent` permette di testare il modello allenato in precedenza. La l
 
 ### 4.1 Logging dei Risultati del Test
 
-I risultati vengono salvati automaticamente in un file CSV: `Test_NUMEROTEST.csv`.
+I risultati vengono salvati automaticamente in un file CSV: `checkpoints/train_8/Test_NUMEROTEST.csv`.
 
 * Modificare `NUMEROTEST` per evitare sovrascritture.
 * Ogni riga del CSV corrisponde a uno step dell'episodio e contiene le seguenti informazioni:
