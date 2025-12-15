@@ -4,7 +4,7 @@
   
   Cosa fa:
   1. Avvia Gazebo caricando un mondo specifico ("my_world.world").
-  2. Include il file di lancio per avviare il robot Doosan (tm5_900) e i suoi controller.
+  2. Include il file di lancio per avviare il robot (tm5_900) e i suoi controller.
   3. Include il file di lancio per spawnare la sfera (my_sphere_pkg).
   4. Include il file di lancio per spawnare gli ostacoli (my_obstacle_pkg).
   
@@ -28,17 +28,17 @@ def generate_launch_description():
     # 1. Trova i percorsi dei pacchetti necessari
     # Trova il percorso della cartella 'share' del pacchetto della sfera.
     my_sphere_files       = get_package_share_directory('my_sphere_pkg')
-    # Trova il percorso della cartella 'share' del pacchetto del robot Doosan.
-    my_doosan_robot_files = get_package_share_directory('tm5_900')
+    # Trova il percorso della cartella 'share' del pacchetto del robot.
+    my_robot_files = get_package_share_directory('tm5_900')
     # Trova il percorso della cartella 'share' del pacchetto degli ostacoli.
     my_obstacle_files = get_package_share_directory('my_obstacle_pkg')
 
 
-    # 2. Prepara il lancio del Robot Doosan
+    # 2. Prepara il lancio del Robot
     # 'IncludeLaunchDescription' è un'azione che permette di lanciare *un altro* file di lancio.
-    # Stiamo includendo il file 'my_doosan_controller.launch.py' dal pacchetto 'tm5_900'.
-    doosan_robot = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(my_doosan_robot_files + '/launch/my_doosan_controller.launch.py')
+    # Stiamo includendo il file 'my_tm5_900_controller.launch.py' dal pacchetto 'tm5_900'.
+    tm5_900_robot = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(my_robot_files + '/launch/my_tm5_900_controller.launch.py')
     ) 
     
     # 3. Prepara il lancio della Sfera
@@ -99,7 +99,7 @@ def generate_launch_description():
 
     # Aggiunge le quattro azioni (processi) che abbiamo definito alla lista di avvio.
     # ROS 2 le avvierà in parallelo.
-    ld.add_action (doosan_robot)
+    ld.add_action (tm5_900_robot)
     ld.add_action (sphere_mark)
     ld.add_action (gazebo_node)
     ld.add_action (spawn_obstacles)
