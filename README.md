@@ -74,7 +74,7 @@ ros2 run my_environment_pkg run_environment
 ros2 run my_environment_pkg test_agent
 ```
 
-Il file `test_agent` permette di testare il modello allenato in precedenza. La lunghezza del test (numero di episodi e step massimi) è modificabile.
+Il file `test_agent` permette di testare il modello allenato in precedenza (devi aver **completato** almeno un train). La lunghezza del test (numero di episodi e step massimi) è modificabile.
 
 ### 4.1 Logging dei Risultati del Test
 
